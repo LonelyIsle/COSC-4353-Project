@@ -2,7 +2,7 @@
 
 <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center;">
   <a href="index.php" class="navbar-logo">
-    <img src="svg/logo.svg" alt="Safe Harbor Logo" style="height:40px;">
+    <img src="svg/logo.svg" alt="Logo" style="height:40px;">
   </a>
   <div class="navbar-nav" style="display: flex; gap: 10px;">
     <?php if (isset($_SESSION['user_id'])): ?>

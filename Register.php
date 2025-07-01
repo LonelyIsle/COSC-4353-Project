@@ -75,24 +75,34 @@
 <body>
     <div class="register-container">
         <h2>Register</h2>
+        <?php if (!empty($_SESSION['errors'])): ?>
+        <div style="background:#ffdddd; border:1px solid #ff6f61; padding:15px; border-radius:5px; color:#333; max-width:400px; margin:20px auto;">
+          <strong>Please correct the following errors:</strong>
+          <ul>
+            <?php foreach ($_SESSION['errors'] as $error): ?>
+              <li><?= htmlspecialchars($error) ?></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+        <?php unset($_SESSION['errors']); endif; ?>
         <form action="register_process.php" method="POST">
             <label>First Name:</label>
-            <input type="text" name="first_name" required>
+            <input type="text" name="first_name" value="<?= htmlspecialchars($_SESSION['old']['first_name'] ?? '') ?>" required>
 
             <label>Last Name:</label>
-            <input type="text" name="last_name" required>
+            <input type="text" name="last_name" value="<?= htmlspecialchars($_SESSION['old']['last_name'] ?? '') ?>" required>
 
             <label>City:</label>
-            <input type="text" name="city" required>
+            <input type="text" name="city" value="<?= htmlspecialchars($_SESSION['old']['city'] ?? '') ?>" required>
 
             <label>State:</label>
-            <input type="text" name="state" required>
+            <input type="text" name="state" value="<?= htmlspecialchars($_SESSION['old']['state'] ?? '') ?>" required>
 
             <label>Zipcode:</label>
-            <input type="text" name="zipcode" required>
+            <input type="text" name="zipcode" value="<?= htmlspecialchars($_SESSION['old']['zipcode'] ?? '') ?>" required>
 
             <label>Email:</label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>" required>
 
             <label>Password:</label>
             <input type="password" name="password" required>
@@ -103,6 +113,7 @@
             <button type="submit">Register</button>
         </form>
         <a href="index.php">Back to Home</a>
+        <?php unset($_SESSION['old']); ?>
     </div>
 </body>
 </html>
