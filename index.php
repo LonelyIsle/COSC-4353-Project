@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Website name</title>
+    <title>Second Chance Shelter</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         .btn {
