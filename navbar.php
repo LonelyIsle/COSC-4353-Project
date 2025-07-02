@@ -9,8 +9,8 @@
       <a href="profile.php" class="nav-btn">Profile</a>
       <a href="logout.php" class="nav-btn">Logout</a>
     <?php else: ?>
-      <a href="login.php" class="nav-btn">Login</a>
-      <a href="register.php" class="nav-btn">Register</a>
+      <a href="Login.php" class="nav-btn">Login</a>
+      <a href="Register.php" class="nav-btn">Register</a>
     <?php endif; ?>
   </div>
 </nav>
