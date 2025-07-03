@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>Second Chance Shelter</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/global.css">
     <style>
         .btn {
             display: inline-block;
