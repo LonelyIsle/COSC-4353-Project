@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Website name</title>
+    <title>Second Chance Shelter</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         .btn {
@@ -24,6 +24,6 @@
     </style>
 </head>
 <body>
-    <h1>Website name</h1>
+    <h1>Second Chance Shelter</h1>
 </body>
 </html>
