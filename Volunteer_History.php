@@ -10,37 +10,79 @@
             padding: 0;
             background-color: #f9f9f9;
         }
+
+        /* Modern Green Navbar */
         header {
-            background-color: #333;
-            padding: 1rem;
+            background-color: #2e7d32; /* Modern green */
+            padding: 0.75rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        header nav a {
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-left a,
+        .nav-right a {
             color: #fff;
-            margin: 0 1rem;
+            margin-right: 1.5rem;
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
-        header nav a:hover {
-            text-decoration: underline;
+
+        .nav-left a:last-child {
+            margin-right: 0;
         }
+
+        .nav-left a:hover,
+        .nav-right a:hover {
+            color: #c8e6c9;
+        }
+
+        #notificationIcon {
+            font-size: 1.3rem;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+        }
+
         h1 {
             text-align: center;
             margin-top: 2rem;
         }
+
         table {
             width: 80%;
             margin: 2rem auto;
             border-collapse: collapse;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
             padding: 1rem;
             border: 1px solid #ddd;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         tr:hover {
             background-color: #f9f9f9;
         }
@@ -48,11 +90,16 @@
 </head>
 <body>
     <header>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#history">Volunteer History</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="#home">Home</a>
+                <a href="#history">Volunteer History</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-right">
+                <a href="#notifications" id="notificationIcon">🔔</a>
+            </div>
         </nav>
     </header>
 
