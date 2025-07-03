@@ -13,7 +13,7 @@
 
         /* Modern Green Navbar */
         header {
-            background-color: #2e7d32; /* Modern green */
+            background-color: #2e7d32;
             padding: 0.75rem 2rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -24,6 +24,7 @@
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
 
         .nav-left a,
@@ -47,6 +48,7 @@
         #notificationIcon {
             font-size: 1.3rem;
             position: relative;
+            cursor: pointer;
         }
 
         .badge {
@@ -58,6 +60,39 @@
             border-radius: 50%;
             padding: 2px 6px;
             font-size: 0.7rem;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 2.8rem;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            width: 250px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dropdown li {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .dropdown li:last-child {
+            border-bottom: none;
         }
 
         h1 {
@@ -98,7 +133,14 @@
                 <a href="#contact">Contact</a>
             </div>
             <div class="nav-right">
-                <a href="#notifications" id="notificationIcon">🔔</a>
+                <a id="notificationIcon">🔔<span class="badge">3</span></a>
+                <div class="dropdown" id="notificationDropdown">
+                    <ul>
+                        <li>New event added: Park Cleanup</li>
+                        <li>Your hours were updated</li>
+                        <li>Reminder: Food Drive tomorrow</li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
@@ -148,6 +190,21 @@
             row.appendChild(descCell);
 
             tableBody.appendChild(row);
+        });
+
+        // Dropdown toggle logic
+        const notificationIcon = document.getElementById('notificationIcon');
+        const dropdown = document.getElementById('notificationDropdown');
+
+        notificationIcon.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+
+        // Optional: close dropdown if click happens outside
+        document.addEventListener('click', (e) => {
+            if (!notificationIcon.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
         });
     </script>
 </body>
