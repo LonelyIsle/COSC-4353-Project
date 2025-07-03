@@ -127,7 +127,7 @@
     <header>
         <nav class="navbar">
             <div class="nav-left">
-                <a href="#home">Home</a>
+                <a href="index.php">Home</a>
                 <a href="#history">Volunteer History</a>
                 <a href="#about">About</a>
                 <a href="#contact">Contact</a>
