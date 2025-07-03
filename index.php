@@ -24,6 +24,6 @@
     </style>
 </head>
 <body>
-    <h1>Website name</h1>
+    <h1>Second Chance Shelter</h1>
 </body>
 </html>

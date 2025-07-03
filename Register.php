@@ -5,74 +5,8 @@
 <head>
     <title>Register</title>
     <link rel="stylesheet" href="css/styles.css">
-<style>
-        body {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .register-container {
-            background: #000;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            text-align: center;
-            width: 320px;
-        }
-        h2 {
-            color: #ff6f61;
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #ff6f61;
-            text-align: left;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ff6f61;
-            border-radius: 4px;
-            background: #000;
-            color: #ff6f61;
-        }
-        button {
-            margin-top: 15px;
-            padding: 8px 20px;
-            background-color: #ff6f61;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #ff8a75;
-        }
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #ff6f61;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
-<body>
+<body class="centered-page">
     <div class="register-container">
         <h2>Register</h2>
         <?php if (!empty($_SESSION['errors'])): ?>
@@ -112,7 +46,8 @@
 
             <button type="submit">Register</button>
         </form>
-        <a href="index.php">Back to Home</a>
+         <p class="centered-link">Wanna go back home?</p>
+        <a href="index.php"><button>Homepage</button></a>
         <?php unset($_SESSION['old']); ?>
     </div>
 </body>
