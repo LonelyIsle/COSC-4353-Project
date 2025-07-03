@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/global.css">
 </head>
 <body class="centered-page">
     <div class="register-container">
