@@ -20,21 +20,6 @@
         </div>
         <?php unset($_SESSION['errors']); endif; ?>
         <form action="register_process.php" method="POST">
-            <label>First Name:</label>
-            <input type="text" name="first_name" value="<?= htmlspecialchars($_SESSION['old']['first_name'] ?? '') ?>" required>
-
-            <label>Last Name:</label>
-            <input type="text" name="last_name" value="<?= htmlspecialchars($_SESSION['old']['last_name'] ?? '') ?>" required>
-
-            <label>City:</label>
-            <input type="text" name="city" value="<?= htmlspecialchars($_SESSION['old']['city'] ?? '') ?>" required>
-
-            <label>State:</label>
-            <input type="text" name="state" value="<?= htmlspecialchars($_SESSION['old']['state'] ?? '') ?>" required>
-
-            <label>Zipcode:</label>
-            <input type="text" name="zipcode" value="<?= htmlspecialchars($_SESSION['old']['zipcode'] ?? '') ?>" required>
-
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>" required>
 
