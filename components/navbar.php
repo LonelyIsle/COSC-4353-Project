@@ -1,7 +1,7 @@
 <?php if (session_status() == PHP_SESSION_NONE) {session_start();}?>
 
 <nav class="navbar">
-  <a href="pages/index.php" class="navbar-logo">
+  <a href="/index.php" class="navbar-logo">
     <img src="images/SecondChance.png" alt="Second Chance Shelter Logo" style="height:140px;">
   </a>
   <div class="navbar-nav">
