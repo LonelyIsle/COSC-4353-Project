@@ -4,11 +4,11 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="/css/global.css">
 </head>
 <body class="centered-page">
     <div class="login-container">
-         <a href="index.php" class="button-link">Back</a>
+         <a href="/index.php" class="button-link">Back</a>
         <h2>Login</h2>
         <form action="login_process.php" method="POST">
             <label>Email:</label>
