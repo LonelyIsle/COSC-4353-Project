@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>Second Chance Shelter</title>
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="/css/global.css">
 </head>
 <body>
     <h1>Second Chance Shelter</h1>
