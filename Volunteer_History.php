@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Volunteer History</title>
+    <title>Volunteer Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             background-color: #f9f9f9;
         }
 
-        /* Modern Green Navbar */
+        
         header {
             background-color: #2e7d32;
             padding: 0.75rem 2rem;
@@ -60,6 +60,11 @@
             border-radius: 50%;
             padding: 2px 6px;
             font-size: 0.7rem;
+            display: none; /* Hide badge by default */
+        }
+
+        .badge.visible {
+            display: inline; /* Show badge when notifications exist */
         }
 
         .dropdown {
@@ -70,7 +75,7 @@
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 6px;
-            width: 250px;
+            width: 280px;
             z-index: 1000;
             overflow: hidden;
         }
@@ -89,15 +94,22 @@
             padding: 0.75rem 1rem;
             border-bottom: 1px solid #eee;
             font-size: 0.9rem;
+            color: #333;
         }
 
         .dropdown li:last-child {
             border-bottom: none;
         }
+        
+        .dropdown .no-notifications {
+            color: #999;
+            text-align: center;
+        }
 
         h1 {
             text-align: center;
             margin-top: 2rem;
+            color: #333;
         }
 
         table {
@@ -133,13 +145,10 @@
                 <a href="#contact">Contact</a>
             </div>
             <div class="nav-right">
-                <a id="notificationIcon">🔔<span class="badge">3</span></a>
+                <a id="notificationIcon">🔔<span class="badge" id="notificationBadge"></span></a>
                 <div class="dropdown" id="notificationDropdown">
-                    <ul>
-                        <li>New event added: Park Cleanup</li>
-                        <li>Your hours were updated</li>
-                        <li>Reminder: Food Drive tomorrow</li>
-                    </ul>
+                    <ul id="notificationList">
+                        </ul>
                 </div>
             </div>
         </nav>
@@ -157,54 +166,110 @@
             </tr>
         </thead>
         <tbody>
-        </tbody>
+            </tbody>
     </table>
 
     <script>
-        const volunteerHistory = [
-            { date: '2024-01-15', event: 'Beach Cleanup', hours: 5, description: 'Collected trash and debris' },
-            { date: '2024-03-22', event: 'Food Drive', hours: 3, description: 'Packed and distributed food' },
-            { date: '2024-05-10', event: 'Tree Planting', hours: 4, description: 'Planted trees in the park' }
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
 
-        const tableBody = document.querySelector('#volunteerTable tbody');
+            // --- DATA ---
+            const volunteerHistory = [
+                { date: '2024-01-15', event: 'Beach Cleanup', hours: 5, description: 'Collected trash and debris' },
+                { date: '2024-03-22', event: 'Food Drive', hours: 3, description: 'Packed and distributed food' },
+                { date: '2024-05-10', event: 'Tree Planting', hours: 4, description: 'Planted trees in the local park' },
+                { date: '2025-06-01', event: 'Animal Shelter Support', hours: 6, description: 'Assisted with animal care and cleaning' }
+            ];
+            
+            // Simulates fetching notifications from a server
+            let notifications = [
+                "New event added: Park Cleanup on Aug 5th",
+                "Your hours for 'Animal Shelter Support' were approved.",
+                "Reminder: Community Garden setup is this Saturday."
+            ];
 
-        volunteerHistory.forEach(record => {
-            const row = document.createElement('tr');
+            // --- DOM ELEMENTS ---
+            const tableBody = document.querySelector('#volunteerTable tbody');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const dropdown = document.getElementById('notificationDropdown');
+            const notificationList = document.getElementById('notificationList');
+            const notificationBadge = document.getElementById('notificationBadge');
 
-            const dateCell = document.createElement('td');
-            dateCell.textContent = record.date;
-
-            const eventCell = document.createElement('td');
-            eventCell.textContent = record.event;
-
-            const hoursCell = document.createElement('td');
-            hoursCell.textContent = record.hours;
-
-            const descCell = document.createElement('td');
-            descCell.textContent = record.description;
-
-            row.appendChild(dateCell);
-            row.appendChild(eventCell);
-            row.appendChild(hoursCell);
-            row.appendChild(descCell);
-
-            tableBody.appendChild(row);
-        });
-
-        // Dropdown toggle logic
-        const notificationIcon = document.getElementById('notificationIcon');
-        const dropdown = document.getElementById('notificationDropdown');
-
-        notificationIcon.addEventListener('click', () => {
-            dropdown.classList.toggle('active');
-        });
-
-        // Optional: close dropdown if click happens outside
-        document.addEventListener('click', (e) => {
-            if (!notificationIcon.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('active');
+            // --- VOLUNTEER HISTORY MODULE ---
+            /**
+             * Renders the volunteer history table from the data array.
+             */
+            function renderVolunteerHistory() {
+                // Clear existing table rows to prevent duplication
+                tableBody.innerHTML = '';
+                
+                volunteerHistory.forEach(record => {
+                    const row = tableBody.insertRow(); 
+                    row.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.event}</td>
+                        <td>${record.hours}</td>
+                        <td>${record.description}</td>
+                    `;
+                });
             }
+
+            // --- NOTIFICATION MODULE ---
+            /**
+             * Renders notifications in the dropdown and updates the badge.
+             */
+            function renderNotifications() {
+                // Clear any old notifications
+                notificationList.innerHTML = '';
+
+                if (notifications.length > 0) {
+                    // Update and show the badge
+                    notificationBadge.textContent = notifications.length;
+                    notificationBadge.classList.add('visible');
+
+                    // Create list items for each notification
+                    notifications.forEach(note => {
+                        const li = document.createElement('li');
+                        li.textContent = note;
+                        notificationList.appendChild(li);
+                    });
+                } else {
+                    // Hide badge and show a "no new notifications" message
+                    notificationBadge.classList.remove('visible');
+                    notificationList.innerHTML = '<li class="no-notifications">No new notifications</li>';
+                }
+            }
+            
+           
+            // Marks notifications as "read" by clearing the array and re-rendering.
+             
+            function markNotificationsAsRead() {
+                notifications = []; // Clear the notifications array
+                renderNotifications(); // Re-render to show empty state
+            }
+
+            // --- EVENT LISTENERS ---
+            // Toggle dropdown and mark notifications as read when opened
+            notificationIcon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevents the document click listener from firing immediately
+                const isActive = dropdown.classList.toggle('active');
+                
+            });
+
+            // Close dropdown if a click happens outside of it
+            document.addEventListener('click', (e) => {
+                // Check if the click is outside the notification area and the dropdown is currently open
+                if (dropdown.classList.contains('active') && !notificationIcon.contains(e.target) && !dropdown.contains(e.target)) {
+                    // Mark as read only if there are notifications to clear
+                    if (notifications.length > 0) {
+                        markNotificationsAsRead();
+                    }
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // --- INITIAL PAGE LOAD ---
+            renderVolunteerHistory();
+            renderNotifications();
         });
     </script>
 </body>
