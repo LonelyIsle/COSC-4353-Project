@@ -19,7 +19,7 @@
           </ul>
         </div>
         <?php unset($_SESSION['errors']); endif; ?>
-        <form action="/register_process.php" method="POST">
+        <form action="/backend/auth/register_process.php" method="POST">
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>" required>
 

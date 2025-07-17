@@ -8,9 +8,17 @@
 </head>
 <body class="centered-page">
     <div class="login-container">
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="error-box">
+                <?php
+                    echo $_SESSION['error'];
+                    unset($_SESSION['error']);
+                ?>
+            </div>
+        <?php endif; ?>
          <a href="/index.php" class="button-link">Back</a>
         <h2>Login</h2>
-        <form action="login_process.php" method="POST">
+        <form action="/backend/auth/Login_backend.php" method="POST">
             <label>Email:</label>
             <input type="email" name="email" required>
 
