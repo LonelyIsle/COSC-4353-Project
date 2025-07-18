@@ -1,0 +1,14 @@
+{
+    "name": "will/cosc-4353-project",
+    "description": "Volunteer coordination platform backend",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^12.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Will\\Cosc4353Project\\": "src/"
+        }
+    },
+    "require": {}
+}
