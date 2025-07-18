@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $skillsOptions = [
     'Communication',
     'Teamwork',
@@ -15,6 +17,9 @@ $urgencyLevels = [
     'High',
     'Critical',
 ];
+
+$errors = $_SESSION['errors'] ?? [];
+unset($_SESSION['errors']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +34,24 @@ $urgencyLevels = [
   <div class="centered-page">
     <div class="event-container">
       <h2>Create New Event</h2>
-      <form action="submit_event.php" method="post">
+
+      <?php if (!empty($errors)): ?>
+        <div class="error-messages">
+          <ul>
+            <?php foreach ($errors as $e): ?>
+              <li><?php echo htmlspecialchars($e); ?></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      <?php endif; ?>
+
+      <?php if (isset($_GET['success'])): ?>
+        <div class="success-message">
+          Event created successfully!
+        </div>
+      <?php endif; ?>
+
+      <form action="/backend/auth/submit_event.php" method="post">
         <div class="form-group">
           <label for="event_name">Event Name <span>*</span></label><br>
           <input
