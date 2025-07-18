@@ -21,7 +21,7 @@ $skillsOptions = [
 <body>
     <div class="centered-page">
         <div class="event-container">
-            <form class="form-container" action="profile.php" method="post">
+            <form class="form-container" action="backend/auth/process_profile.php" method="post">
                 <div class="form-box">
                     <h2 class="form-header">Profile management</h2>
                     <div class="form-group">
