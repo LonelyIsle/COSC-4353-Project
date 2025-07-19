@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true"
+         stopOnFailure="false">
+
+  <testsuites>
+    <testsuite name="Project Test Suite">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <source>
+    <include>
+      <directory>src</directory>
+      <directory>backend</directory>
+    </include>
+  </source>
+
+  <coverage>
+    <report>
+      <html outputDirectory="coverage"/>
+    </report>
+  </coverage>
+
+  <php>
+    <env name="XDEBUG_MODE" value="coverage"/>
+  </php>
+</phpunit>

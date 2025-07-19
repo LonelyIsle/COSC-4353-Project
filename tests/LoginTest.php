@@ -3,7 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../backend/helpers/auth_helpers.php';
 
-class LoginTests extends TestCase
+class LoginTest extends TestCase
 {
     public function testEmptyFields()
     {
