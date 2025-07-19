@@ -1,0 +1,1 @@
+{"version":1,"defects":[],"times":{"ValidateEventDataTest::testAllFieldsValid":0.029,"ValidateEventDataTest::testMissingRequiredFields":0.001,"ValidateEventDataTest::testTooLongName":0.001,"ValidateEventDataTest::testInvalidDateFormat":0.001,"ValidateMatchDataTest::testAllFieldsValid":0.001,"ValidateMatchDataTest::testMissingFields":0.001}}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true">
+
+  <!-- which tests to run -->
+  <testsuites>
+    <testsuite name="unit">
+      <directory suffix="Test.php">tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <!-- tell PHPUnit which code is “ours” -->
+  <source>
+    <include>
+      <!-- the ONLY file that has tests right now -->
+      <file>backend/auth/validation.php</file>
+    </include>
+  </source>
+
+  <!-- tell PHPUnit to print coverage in the console
+       (add other <log> lines here if you also want HTML, Clover, etc.) -->
+  <coverage includeUncoveredFiles="false">
+    <report>
+      <text outputFile="php://stdout"/>
+    </report>
+  </coverage>
+
+</phpunit>
