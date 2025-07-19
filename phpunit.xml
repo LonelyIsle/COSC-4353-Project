@@ -14,6 +14,7 @@
     <include>
       <!-- the ONLY file that has tests right now -->
       <file>backend/auth/validation.php</file>
+      <file>backend/auth/validators.php</file>
     </include>
   </source>
 
