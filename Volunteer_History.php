@@ -185,7 +185,7 @@
             async function fetchAndRenderVolunteerHistory() {
                 try {
                     // Make an asynchronous request to the PHP backend
-                    const response = await fetch('api/get_volunteer_history.php');
+                    const response = await fetch('backend/auth/get_volunteer_history.php');
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -219,7 +219,7 @@
                 notificationBadge.classList.remove('visible'); // Hide badge while fetching
 
                 try {
-                    const response = await fetch('api/get_notifications.php');
+                    const response = await fetch('backend/auth/get_notifications.php');
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -252,7 +252,7 @@
              */
             async function markNotificationsAsRead() {
                 try {
-                    const response = await fetch('api/mark_notifications_read.php', {
+                    const response = await fetch('backend/auth/mark_notifications_read.php', {
                         method: 'POST' // Use POST for actions that change state
                     });
                     if (!response.ok) {
