@@ -24,4 +24,6 @@
     
     "test": "phpunit --colors=always tests"
   }
+        }
+    }
 }
