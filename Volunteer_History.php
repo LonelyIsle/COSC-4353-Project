@@ -11,7 +11,6 @@
             background-color: #f9f9f9;
         }
 
-        
         header {
             background-color: #2e7d32;
             padding: 0.75rem 2rem;
@@ -148,7 +147,7 @@
                 <a id="notificationIcon">🔔<span class="badge" id="notificationBadge"></span></a>
                 <div class="dropdown" id="notificationDropdown">
                     <ul id="notificationList">
-                        </ul>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -166,26 +165,11 @@
             </tr>
         </thead>
         <tbody>
-            </tbody>
+        </tbody>
     </table>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- DATA ---
-            const volunteerHistory = [
-                { date: '2024-01-15', event: 'Beach Cleanup', hours: 5, description: 'Collected trash and debris' },
-                { date: '2024-03-22', event: 'Food Drive', hours: 3, description: 'Packed and distributed food' },
-                { date: '2024-05-10', event: 'Tree Planting', hours: 4, description: 'Planted trees in the local park' },
-                { date: '2025-06-01', event: 'Animal Shelter Support', hours: 6, description: 'Assisted with animal care and cleaning' }
-            ];
-            
-            // Simulates fetching notifications from a server
-            let notifications = [
-                "New event added: Park Cleanup on Aug 5th",
-                "Your hours for 'Animal Shelter Support' were approved.",
-                "Reminder: Community Garden setup is this Saturday."
-            ];
 
             // --- DOM ELEMENTS ---
             const tableBody = document.querySelector('#volunteerTable tbody');
@@ -196,71 +180,107 @@
 
             // --- VOLUNTEER HISTORY MODULE ---
             /**
-             * Renders the volunteer history table from the data array.
+             * Fetches volunteer history from the simulated backend PHP file.
              */
-            function renderVolunteerHistory() {
-                // Clear existing table rows to prevent duplication
-                tableBody.innerHTML = '';
-                
-                volunteerHistory.forEach(record => {
-                    const row = tableBody.insertRow(); 
-                    row.innerHTML = `
-                        <td>${record.date}</td>
-                        <td>${record.event}</td>
-                        <td>${record.hours}</td>
-                        <td>${record.description}</td>
-                    `;
-                });
+            async function fetchAndRenderVolunteerHistory() {
+                try {
+                    // Make an asynchronous request to the PHP backend
+                    const response = await fetch('api/get_volunteer_history.php');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const volunteerHistory = await response.json(); // Parse the JSON response
+
+                    // Clear existing table rows to prevent duplication
+                    tableBody.innerHTML = '';
+                    
+                    volunteerHistory.forEach(record => {
+                        const row = tableBody.insertRow(); 
+                        row.innerHTML = `
+                            <td>${record.date}</td>
+                            <td>${record.event}</td>
+                            <td>${record.hours}</td>
+                            <td>${record.description}</td>
+                        `;
+                    });
+                } catch (error) {
+                    console.error('Error fetching volunteer history:', error);
+                    tableBody.innerHTML = '<tr><td colspan="4">Failed to load volunteer history.</td></tr>';
+                }
             }
 
             // --- NOTIFICATION MODULE ---
             /**
-             * Renders notifications in the dropdown and updates the badge.
+             * Fetches notifications from the simulated backend PHP file and renders them.
              */
-            function renderNotifications() {
+            async function fetchAndRenderNotifications() {
                 // Clear any old notifications
                 notificationList.innerHTML = '';
+                notificationBadge.classList.remove('visible'); // Hide badge while fetching
 
-                if (notifications.length > 0) {
-                    // Update and show the badge
-                    notificationBadge.textContent = notifications.length;
-                    notificationBadge.classList.add('visible');
+                try {
+                    const response = await fetch('api/get_notifications.php');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const notifications = await response.json();
 
-                    // Create list items for each notification
-                    notifications.forEach(note => {
-                        const li = document.createElement('li');
-                        li.textContent = note;
-                        notificationList.appendChild(li);
-                    });
-                } else {
-                    // Hide badge and show a "no new notifications" message
-                    notificationBadge.classList.remove('visible');
-                    notificationList.innerHTML = '<li class="no-notifications">No new notifications</li>';
+                    if (notifications.length > 0) {
+                        // Update and show the badge
+                        notificationBadge.textContent = notifications.length;
+                        notificationBadge.classList.add('visible');
+
+                        // Create list items for each notification
+                        notifications.forEach(note => {
+                            const li = document.createElement('li');
+                            li.textContent = note;
+                            notificationList.appendChild(li);
+                        });
+                    } else {
+                        // Hide badge and show a "no new notifications" message
+                        notificationList.innerHTML = '<li class="no-notifications">No new notifications</li>';
+                    }
+                } catch (error) {
+                    console.error('Error fetching notifications:', error);
+                    notificationList.innerHTML = '<li class="no-notifications">Error loading notifications.</li>';
                 }
             }
             
-           
-            // Marks notifications as "read" by clearing the array and re-rendering.
-             
-            function markNotificationsAsRead() {
-                notifications = []; // Clear the notifications array
-                renderNotifications(); // Re-render to show empty state
+            /**
+             * Sends a request to the simulated backend to mark notifications as read.
+             * After "marking as read", it re-fetches and re-renders notifications.
+             */
+            async function markNotificationsAsRead() {
+                try {
+                    const response = await fetch('api/mark_notifications_read.php', {
+                        method: 'POST' // Use POST for actions that change state
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const result = await response.json();
+                    console.log(result.message); // Log the success message from backend
+                    
+                    // After marking as read on the "backend", re-fetch to reflect the empty state
+                    fetchAndRenderNotifications();
+                } catch (error) {
+                    console.error('Error marking notifications as read:', error);
+                }
             }
 
             // --- EVENT LISTENERS ---
-            // Toggle dropdown and mark notifications as read when opened
+            // Toggle dropdown
             notificationIcon.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevents the document click listener from firing immediately
-                const isActive = dropdown.classList.toggle('active');
-                
+                dropdown.classList.toggle('active');
             });
 
-            // Close dropdown if a click happens outside of it
+            // Close dropdown and mark notifications as read if a click happens outside of it
             document.addEventListener('click', (e) => {
                 // Check if the click is outside the notification area and the dropdown is currently open
                 if (dropdown.classList.contains('active') && !notificationIcon.contains(e.target) && !dropdown.contains(e.target)) {
-                    // Mark as read only if there are notifications to clear
-                    if (notifications.length > 0) {
+                    // Mark as read only if the badge is visible (meaning there were notifications)
+                    if (notificationBadge.classList.contains('visible')) {
                         markNotificationsAsRead();
                     }
                     dropdown.classList.remove('active');
@@ -268,8 +288,8 @@
             });
 
             // --- INITIAL PAGE LOAD ---
-            renderVolunteerHistory();
-            renderNotifications();
+            fetchAndRenderVolunteerHistory(); // Call the async function to fetch and render
+            fetchAndRenderNotifications();   // Call the async function to fetch and render
         });
     </script>
 </body>
