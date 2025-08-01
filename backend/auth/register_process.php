@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/../db_connection.php'; 
+
 $errors = [];
 
 $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
@@ -19,6 +21,21 @@ if ($password !== $confirm_password) {
 
 if (!empty($errors)) {
     $_SESSION['errors'] = $errors;
+    $_SESSION['old'] = $_POST;
+    header("Location: /pages/register.php");
+    exit();
+}
+
+try {
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $pdo->prepare("INSERT INTO UserCredentials (email, password) VALUES (:email, :password)");
+    $stmt->execute([
+        ':email' => $email,
+        ':password' => $hashedPassword
+    ]);
+} catch (PDOException $e) {
+    $_SESSION['errors'] = ["Registration failed: " . $e->getMessage()];
     $_SESSION['old'] = $_POST;
     header("Location: /pages/register.php");
     exit();
