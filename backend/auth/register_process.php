@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/../db_connection.php'; 
+require_once __DIR__ . '/../db.php'; 
 
 $errors = [];
 
@@ -29,7 +29,7 @@ if (!empty($errors)) {
 try {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $pdo->prepare("INSERT INTO UserCredentials (email, password) VALUES (:email, :password)");
+    $stmt = $pdo->prepare("INSERT INTO UserCredentials (email, password_hash) VALUES (:email, :password)");
     $stmt->execute([
         ':email' => $email,
         ':password' => $hashedPassword
