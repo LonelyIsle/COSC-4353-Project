@@ -1,6 +1,3 @@
-// DO  NOT TOUCH THIS FILE - HENRY
-// Oaquired from apache set env
-// backend/helpers/db.php
 <?php
 // 1) Autoload Composer (one level up from backend/)
 require_once __DIR__ . '/../vendor/autoload.php';
