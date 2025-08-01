@@ -11,6 +11,7 @@
     <?php else: ?>
       <a href="pages/Login.php" class="nav-btn">Login</a>
       <a href="pages/Register.php" class="nav-btn">Register</a>
+      <a href="pages/services.php" class="nav-btn">Our Services</a>
     <?php endif; ?>
   </div>
 </nav>
