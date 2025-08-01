@@ -1,4 +1,3 @@
-// File: backend/auth/submit_event.php
 <?php
 session_start();
 

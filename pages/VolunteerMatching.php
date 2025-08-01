@@ -1,20 +1,32 @@
 <?php
 session_start();
+require_once __DIR__ . '/../backend/db.php';
 
-$volunteers    = [
-    'Alice Smith',
-    'Bob Johnson',
-    'Carol Lee',
-];
-$matchedEvents = [
-    'Community Cleanup',
-    'Food Drive',
-    'Food Distribution',
-    'Shelter Kitchen',
-];
+
+if (!isset($_SESSION['user_id'])) {
+     $_SESSION['user_id'] = 1;
+}
 
 $errors = $_SESSION['errors'] ?? [];
 unset($_SESSION['errors']);
+
+$stmt = $pdo->prepare("
+    SELECT up.user_id, up.full_name
+      FROM UserProfile up
+      JOIN UserCredentials uc ON up.user_id = uc.user_id
+     WHERE uc.role = 'volunteer'
+     ORDER BY up.full_name
+");
+$stmt->execute();
+$volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->prepare("
+    SELECT event_id, event_name
+      FROM EventDetails
+     ORDER BY event_date ASC
+");
+$stmt->execute();
+$matchedEvents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,20 +36,17 @@ unset($_SESSION['errors']);
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Volunteer Matching</title>
   <link rel="stylesheet" href="/css/global.css">
-</head>
 <body>
   <div class="centered-page">
     <div class="event-container">
       <h2>Volunteer Matching</h2>
 
       <?php if (!empty($errors)): ?>
-        <div class="error-messages">
-          <ul>
-            <?php foreach ($errors as $e): ?>
-              <li><?php echo htmlspecialchars($e); ?></li>
-            <?php endforeach; ?>
-          </ul>
-        </div>
+        <div class="error-messages"><ul>
+          <?php foreach ($errors as $e): ?>
+            <li><?=htmlspecialchars($e)?></li>
+          <?php endforeach; ?>
+        </ul></div>
       <?php endif; ?>
 
       <?php if (isset($_GET['success'])): ?>
@@ -46,15 +55,13 @@ unset($_SESSION['errors']);
         </div>
       <?php endif; ?>
 
-      <form action="/backend/auth/process_match.php" method="post">
+      <form action="/backend/controllers/process_match.php" method="post">
         <div class="form-group">
           <label for="volunteer_name">Volunteer Name <span>*</span></label><br>
           <select id="volunteer_name" name="volunteer_name" required>
             <option value="" disabled selected>Select a volunteer</option>
             <?php foreach ($volunteers as $v): ?>
-              <option value="<?php echo htmlspecialchars($v); ?>">
-                <?php echo htmlspecialchars($v); ?>
-              </option>
+              <option value="<?=$v['user_id']?>"><?=htmlspecialchars($v['full_name'])?></option>
             <?php endforeach; ?>
           </select>
         </div>
@@ -64,9 +71,7 @@ unset($_SESSION['errors']);
           <select id="matched_event" name="matched_event" required>
             <option value="" disabled selected>Select matched event</option>
             <?php foreach ($matchedEvents as $e): ?>
-              <option value="<?php echo htmlspecialchars($e); ?>">
-                <?php echo htmlspecialchars($e); ?>
-              </option>
+              <option value="<?=$e['event_id']?>"><?=htmlspecialchars($e['event_name'])?></option>
             <?php endforeach; ?>
           </select>
         </div>
