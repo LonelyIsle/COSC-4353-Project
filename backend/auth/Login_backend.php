@@ -20,7 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['role'] = $user['role'];
 
-            header("Location: /pages/profile.php");
+            if ($user['role'] === 'admin') {
+                header("Location: /pages/admin_dashboard.php");
+            } else {
+                header("Location: /pages/profile.php");
+            }
             exit();
         } else {
             $_SESSION['error'] = "Invalid email or password.";
