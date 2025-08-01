@@ -3,9 +3,12 @@ session_start();
 require_once __DIR__ . '/../backend/db.php';
 
 
+
 if (!isset($_SESSION['user_id'])) {
-     $_SESSION['user_id'] = 2;
+    header('Location: /pages/Login.php');
+    exit;
 }
+
 
 $skillsOptions = [
     'Communication','Teamwork','Leadership',

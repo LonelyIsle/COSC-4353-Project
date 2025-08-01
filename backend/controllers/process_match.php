@@ -1,9 +1,8 @@
-// File: backend/auth/process_match.php
 <?php
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/login.php');
+    header('Location: /pages/Login.php');
     exit;
 }
 
@@ -14,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$volunteerName = trim($_POST['volunteer_name'] ?? '');
-$matchedEvent  = trim($_POST['matched_event'] ?? '');
+$volunteerId = intval($_POST['volunteer_name'] ?? 0);
+$eventId     = intval($_POST['matched_event']  ?? 0);
 
 $errors = [];
-if ($volunteerName === '') { $errors[] = 'Volunteer is required.'; }
-if ($matchedEvent  === '') { $errors[] = 'Event selection is required.'; }
+if ($volunteerId <= 0) { $errors[] = 'Volunteer is required.'; }
+if ($eventId     <= 0) { $errors[] = 'Event selection is required.'; }
 
 if ($errors) {
     $_SESSION['errors'] = $errors;
@@ -28,20 +27,23 @@ if ($errors) {
 }
 
 try {
-    $stmt = $pdo->prepare(
-        "INSERT INTO volunteer_matches 
-         (user_id, volunteer_name, event_name)
-         VALUES (:uid, :vol, :evt)"
-    );
+    $stmt = $pdo->prepare("
+        INSERT INTO VolunteerHistory
+          (user_id, event_id, status)
+        VALUES
+          (:uid, :eid, 'registered')
+    ");
     $stmt->execute([
-        ':uid' => $_SESSION['user_id'],
-        ':vol' => $volunteerName,
-        ':evt' => $matchedEvent,
+        ':uid' => $volunteerId,
+        ':eid' => $eventId,
     ]);
 
     header('Location: /pages/VolunteerMatching.php?success=1');
+    exit;
+
 } catch (PDOException $e) {
+    error_log('process_match error: ' . $e->getMessage());
     $_SESSION['errors'] = ['Failed to match volunteer. Please try again.'];
     header('Location: /pages/VolunteerMatching.php');
+    exit;
 }
-exit;
