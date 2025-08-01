@@ -1,34 +1,76 @@
 <?php
+// --- SETUP ---
 header('Content-Type: application/json'); // Tell the browser we're sending JSON
 
-// Simulated hardcoded volunteer history data
-$volunteerHistory = [
-    [
-        'date' => '2024-01-15',
-        'event' => 'Beach Cleanup',
-        'hours' => 5,
-        'description' => 'Collected trash and debris'
-    ],
-    [
-        'date' => '2024-03-22',
-        'event' => 'Food Drive',
-        'hours' => 3,
-        'description' => 'Packed and distributed food'
-    ],
-    [
-        'date' => '2024-05-10',
-        'event' => 'Tree Planting',
-        'hours' => 4,
-        'description' => 'Planted trees in the local park'
-    ],
-    [
-        'date' => '2025-06-01', // Future date, as in your original
-        'event' => 'Animal Shelter Support',
-        'hours' => 6,
-        'description' => 'Assisted with animal care and cleaning'
-    ]
-];
+// --- DATABASE CONNECTION DETAILS ---
+$servername = $host;
+$username = $user;
+$password = $pass;
+$dbname = $db; 
 
-// Output the data as JSON
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check for connection errors
+if ($conn->connect_error) {
+    // Set HTTP response code to 500 Internal Server Error
+    http_response_code(500);
+    die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
+}
+
+// --- GET USER ID FROM REQUEST ---
+if (!isset($_GET['user_id']) || empty($_GET['user_id'])) {
+    // Set HTTP response code to 400 Bad Request
+    http_response_code(400);
+    die(json_encode(['error' => 'User ID is required.']));
+}
+$user_id = $_GET['user_id'];
+
+
+// --- PREPARE THE SQL SELECT STATEMENT ---
+// This query joins VolunteerHistory and EventDetails to get all relevant info for a specific user.
+$sql = "SELECT 
+            vh.id AS history_id,
+            vh.status,
+            ed.event_name,
+            ed.description,
+            ed.location,
+            ed.required_skills,
+            ed.urgency_level,
+            ed.event_date
+        FROM 
+            VolunteerHistory AS vh
+        JOIN 
+            EventDetails AS ed ON vh.event_id = ed.event_id
+        WHERE 
+            vh.user_id = ?";
+
+$stmt = $conn->prepare($sql);
+
+if ($stmt === false) {
+    http_response_code(500);
+    die(json_encode(['error' => 'Failed to prepare statement: ' . $conn->error]));
+}
+
+// Bind the user_id to the placeholder. "i" means the variable is an integer.
+$stmt->bind_param("i", $user_id);
+
+// --- EXECUTE THE QUERY AND FETCH RESULTS ---
+$stmt->execute();
+$result = $stmt->get_result();
+
+$volunteerHistory = [];
+if ($result && $result->num_rows > 0) {
+    // Fetch all results into an associative array
+    $volunteerHistory = $result->fetch_all(MYSQLI_ASSOC);
+}
+
+// --- CLOSE THE STATEMENT AND CONNECTION ---
+$stmt->close();
+$conn->close();
+
+// --- OUTPUT THE DATA AS JSON ---
+// This will output the array of history events, or an empty array if none were found.
 echo json_encode($volunteerHistory);
+
 ?>
