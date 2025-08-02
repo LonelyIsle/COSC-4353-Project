@@ -1,5 +1,13 @@
 <?php
-//This is for testing VolunteerMatching.php and EMForm.php
+// backend/auth/validation.php
+// Validation helpers for EMForm and VolunteerMatching
+
+/**
+ * Validate the POST data from EMForm.php
+ *
+ * @param array $data
+ * @return string[]  list of error messages
+ */
 function validateEventData(array $data): array
 {
     $errors = [];
@@ -41,7 +49,12 @@ function validateEventData(array $data): array
     return $errors;
 }
 
-
+/**
+ * Validate the POST data from VolunteerMatching.php
+ *
+ * @param array $data
+ * @return string[]  list of error messages
+ */
 function validateMatchData(array $data): array
 {
     $errors = [];

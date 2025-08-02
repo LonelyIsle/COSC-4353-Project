@@ -1,12 +1,14 @@
 <?php
-//this is for testing EMForm.php backend
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
+// point at the new validation file
 require_once __DIR__ . '/../backend/auth/validation.php';
 
 class ValidateEventDataTest extends TestCase
 {
-    public function testAllFieldsValid()
+    public function testAllFieldsValid(): void
     {
         $post = [
             'event_name'        => 'My Event',
@@ -21,21 +23,21 @@ class ValidateEventDataTest extends TestCase
         $this->assertEmpty($errors, 'Expected no validation errors for valid input');
     }
 
-    public function testMissingRequiredFields()
+    public function testMissingRequiredFields(): void
     {
         $post = []; // empty
         $errors = validateEventData($post);
 
-        $this->assertContains('Event Name is required.',        $errors);
-        $this->assertContains('Description is required.',       $errors);
-        $this->assertContains('Location is required.',          $errors);
-        $this->assertContains('Select at least one skill.',     $errors);
-        $this->assertContains('Urgency level is required.',     $errors);
-        $this->assertContains('Event date is required.',        $errors);
+        $this->assertContains('Event Name is required.',               $errors);
+        $this->assertContains('Description is required.',              $errors);
+        $this->assertContains('Location is required.',                 $errors);
+        $this->assertContains('Select at least one skill.',            $errors);
+        $this->assertContains('Urgency level is required.',            $errors);
+        $this->assertContains('Event date is required.',               $errors);
         $this->assertCount(6, $errors);
     }
 
-    public function testTooLongName()
+    public function testTooLongName(): void
     {
         $post = [
             'event_name'        => str_repeat('A', 101),
@@ -49,7 +51,7 @@ class ValidateEventDataTest extends TestCase
         $this->assertContains('Event Name must be 100 characters or fewer.', $errors);
     }
 
-    public function testInvalidDateFormat()
+    public function testInvalidDateFormat(): void
     {
         $post = [
             'event_name'        => 'Test',

@@ -1,14 +1,27 @@
 <?php
 // backend/db.php
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-$envFile = __DIR__ . '/../.env';
-if (file_exists($envFile)) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-    $dotenv->safeLoad();  
+// 0) If PHPUnit told us to skip connecting, give back a dummy $pdo
+if (getenv('DB_SKIP_CONNECTION')) {
+    if (!class_exists('DummyPDO')) {
+        class DummyPDO {
+            public function prepare()    { throw new \LogicException("DB skipped in tests"); }
+            public function query()      { throw new \LogicException("DB skipped in tests"); }
+            public function lastInsertId(){ return null; }
+        }
+    }
+    $pdo = new DummyPDO();
+    return;
 }
 
+// 1) Autoload + Dotenv, etc.
+require_once __DIR__ . '/../vendor/autoload.php';
+$envFile = __DIR__ . '/../.env';
+if (file_exists($envFile)) {
+    Dotenv\Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
+}
+
+// 2) Real credentials
 $host    = $_ENV['DB_HOST']    ?? getenv('DB_HOST')    ?? '';
 $db      = $_ENV['DB_NAME']    ?? getenv('DB_NAME')    ?? '';
 $user    = $_ENV['DB_USER']    ?? getenv('DB_USER')    ?? '';
@@ -20,7 +33,7 @@ if (!$host || !$db || !$user || !$pass) {
     exit;
 }
 
-$dsn = "mysql:host={$host};dbname={$db};charset={$charset}";
+$dsn     = "mysql:host={$host};dbname={$db};charset={$charset}";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
