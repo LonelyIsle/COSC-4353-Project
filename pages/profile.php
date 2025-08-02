@@ -15,13 +15,13 @@ $skillsOptions = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Management</title>
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="/css/global.css">
 
 </head>
 <body>
     <div class="centered-page">
         <div class="event-container">
-            <form class="form-container" action="backend/auth/process_profile.php" method="post">
+            <form class="form-container" action="/backend/auth/process_profile.php" method="post">
                 <div class="form-box">
                     <h2 class="form-header">Profile management</h2>
                     <div class="form-group">
@@ -47,22 +47,22 @@ $skillsOptions = [
                             <option value="" disabled selected>Select State</option>
                             <?php
                                 $states = array(
-                                    'AL'=>'Alabama', 'AK'=>'Alaska', 'AZ'=>'Arizona', 'AR'=>'Arkansas',
-                                    'CA'=>'California', 'CO'=>'Colorado', 'CT'=>'Connecticut', 'DE'=>'Delaware',
-                                    'FL'=>'Florida', 'GA'=>'Georgia', 'HI'=>'Hawaii', 'ID'=>'Idaho',
-                                    'IL'=>'Illinois', 'IN'=>'Indiana', 'IA'=>'Iowa', 'KS'=>'Kansas',
-                                    'KY'=>'Kentucky', 'LA'=>'Louisiana', 'ME'=>'Maine', 'MD'=>'Maryland',
-                                    'MA'=>'Massachusetts', 'MI'=>'Michigan', 'MN'=>'Minnesota', 'MS'=>'Mississippi',
-                                    'MO'=>'Missouri', 'MT'=>'Montana', 'NE'=>'Nebraska', 'NV'=>'Nevada',
-                                    'NH'=>'New Hampshire', 'NJ'=>'New Jersey', 'NM'=>'New Mexico', 'NY'=>'New York',
-                                    'NC'=>'North Carolina', 'ND'=>'North Dakota', 'OH'=>'Ohio', 'OK'=>'Oklahoma',
-                                    'OR'=>'Oregon', 'PA'=>'Pennsylvania', 'RI'=>'Rhode Island',
-                                    'SC'=>'South Carolina', 'SD'=>'South Dakota', 'TN'=>'Tennessee',
-                                    'TX'=>'Texas', 'UT'=>'Utah', 'VT'=>'Vermont', 'VA'=>'Virginia',
-                                    'WA'=>'Washington', 'WV'=>'West Virginia', 'WI'=>'Wisconsin', 'WY'=>'Wyoming'
+                                    'AL'=>'AL', 'AK'=>'AK', 'AZ'=>'AZ', 'AR'=>'AR',
+                                    'CA'=>'CA', 'CO'=>'CO', 'CT'=>'CT', 'DE'=>'DE',
+                                    'FL'=>'FL', 'GA'=>'GA', 'HI'=>'HI', 'ID'=>'ID',
+                                    'IL'=>'IL', 'IN'=>'IN', 'IA'=>'IA', 'KS'=>'KS',
+                                    'KY'=>'KY', 'LA'=>'LA', 'ME'=>'ME', 'MD'=>'MD',
+                                    'MA'=>'MA', 'MI'=>'MI', 'MN'=>'MN', 'MS'=>'MS',
+                                    'MO'=>'MO', 'MT'=>'MT', 'NE'=>'NE', 'NV'=>'NV',
+                                    'NH'=>'NH', 'NJ'=>'NJ', 'NM'=>'NM', 'NY'=>'NY',
+                                    'NC'=>'NC', 'ND'=>'ND', 'OH'=>'OH', 'OK'=>'OK',
+                                    'OR'=>'OR', 'PA'=>'PA', 'RI'=>'RI',
+                                    'SC'=>'SC', 'SD'=>'SD', 'TN'=>'TN',
+                                    'TX'=>'TX', 'UT'=>'UT', 'VT'=>'VT', 'VA'=>'VA',
+                                    'WA'=>'WA', 'WV'=>'WV', 'WI'=>'WI', 'WY'=>'WY'
                                 );
                                 foreach($states as $abbr => $name) {
-                                echo "<option value=\"$abbr\">$name</option>";
+                                    echo "<option value=\"$abbr\">$name</option>";
                                 }
                             ?>
                         </select>
@@ -89,11 +89,10 @@ $skillsOptions = [
 
                     <div class="form-group">
                         <label for="datePicker">Availability</label>
-                        <input type="date" id="datePicker" required>
+                        <input type="date" id="datePicker">
                         <button type="button" id="addBtn">Add Date</button>
                         <div id="selectedDates"></div>
                     </div>
-                    
                     <button type="submit">Update Profile</button>
                 </div>
             </form>
