@@ -18,7 +18,7 @@ This project is a comprehensive web-based volunteer coordination and event manag
 
 ## Technologies Used
 
-- **Frontend**: HTML, CSS (Global Styles), JavaScript  
+- **Frontend**: HTML, CSS (Global Styles), PHP  
 - **Backend**: PHP  
 - **Database**: MySQL  
 - **Styling**: Custom global.css for consistent UI design  
