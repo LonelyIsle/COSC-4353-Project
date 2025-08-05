@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./images/logo.png" alt="Project Logo" width="150" />
+  <img src="./images/Logo.png" alt="Project Logo" width="150" />
 </div>
 
 # COSC 4353 Project
