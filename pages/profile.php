@@ -1,4 +1,5 @@
 <?php session_start(); 
+include '../components/navbar.php';
 $skillsOptions = [
     'Communication',
     'Teamwork',
@@ -19,7 +20,7 @@ $skillsOptions = [
 
 </head>
 <body>
-    <div class="centered-page">
+    <div class="centered-page scrollable-container">
         <div class="event-container">
             <form class="form-container" action="/backend/auth/process_profile.php" method="post">
                 <div class="form-box">

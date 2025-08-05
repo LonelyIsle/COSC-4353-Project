@@ -1,7 +1,9 @@
 html, body {
-    height: 100%;
+    height: auto;
+    min-height: 100%;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: white;
     color: #333;
@@ -196,4 +198,48 @@ button:hover {
     display: block;
     width: 100%;
     margin: 20px 0 0;
+}
+
+.homepage-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    padding: 60px;
+    background-color: #ffffff;
+    gap: 40px;
+    position: relative;
+}
+
+.homepage-image {
+    width: 40%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    margin-left: -20px;
+}
+
+.homepage-content {
+    background: #fff8e1;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    position: relative;
+    z-index: 2;
+    margin-left: -60px;
+    margin-top: -30px;
+}
+
+.homepage-content h1 {
+    color: #2e7d32;
+    font-size: 2.2em;
+    margin-bottom: 20px;
+}
+
+.scrollable-container {
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 12rem 0 12rem 0;
 }
