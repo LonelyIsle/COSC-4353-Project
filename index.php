@@ -17,11 +17,14 @@
             ?>
         </div>
     <?php endif; ?>
-    <h1>Second Chance Shelter</h1>
-
-    <p>Welcome to Second Chance Shelter, a safe haven dedicated to providing support and resources for those in need. We are committed to helping individuals and families rebuild their lives with dignity and hope.</p>
-
-    
+    <div class="homepage-container" style="margin-top: 40px;">
+        <img src="images/Volunteer.jpg" alt="Shelter Community" class="homepage-image margin-left" style="margin-top: -500px;">
+        <div class="homepage-content" style="margin-top: -500px;">
+            <h1>Welcome to Second Chance Shelter</h1>
+            <p>We are committed to helping individuals and families rebuild their lives with dignity and hope.</p>
+            <a href="pages/register.php" class="btn">Join Us</a>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> Second Chance Shelter. All rights reserved.</p>
