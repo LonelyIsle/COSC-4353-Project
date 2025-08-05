@@ -59,11 +59,11 @@
             border-radius: 50%;
             padding: 2px 6px;
             font-size: 0.7rem;
-            display: none; /* Hide badge by default */
+            display: none;
         }
 
         .badge.visible {
-            display: inline; /* Show badge when notifications exist */
+            display: inline;
         }
 
         .dropdown {
@@ -111,6 +111,42 @@
             color: #333;
         }
 
+        .search-container {
+            text-align: center;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            width: 80%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        .search-container label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .search-container input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .search-container button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #2e7d32;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-container button:hover {
+            background-color: #1b5e20;
+        }
+
         table {
             width: 80%;
             margin: 2rem auto;
@@ -155,89 +191,92 @@
 
     <h1 id="history">Volunteer History</h1>
 
+    <div class="search-container">
+        <label for="userIdInput">Enter Volunteer ID:</label>
+        <input type="number" id="userIdInput" placeholder="e.g., 123">
+        <button id="fetchHistoryBtn">Get History</button>
+    </div>
+
     <table id="volunteerTable">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Event</th>
-                <th>Hours</th>
+                <th>Event Date</th>
+                <th>Event Name</th>
                 <th>Description</th>
+                <th>Location</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-        </tbody>
+            </tbody>
     </table>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- DOM ELEMENTS ---
+            // DOM Elements
             const tableBody = document.querySelector('#volunteerTable tbody');
+            const userIdInput = document.getElementById('userIdInput');
+            const fetchHistoryBtn = document.getElementById('fetchHistoryBtn');
             const notificationIcon = document.getElementById('notificationIcon');
             const dropdown = document.getElementById('notificationDropdown');
             const notificationList = document.getElementById('notificationList');
             const notificationBadge = document.getElementById('notificationBadge');
 
-            // --- VOLUNTEER HISTORY MODULE ---
             /**
-             * Fetches volunteer history from the simulated backend PHP file.
+             * Fetches and displays volunteer history for a given user ID.
              */
-            async function fetchAndRenderVolunteerHistory() {
+            async function fetchAndRenderVolunteerHistory(userId) {
+                tableBody.innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
                 try {
-                    // Make an asynchronous request to the PHP backend
-                    const response = await fetch('backend/auth/get_volunteer_history.php');
+                    // Fetch history from the backend using the provided user ID
+                    const response = await fetch(`backend/auth/get_volunteer_history.php?user_id=${userId}`);
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
                     }
-                    const volunteerHistory = await response.json(); // Parse the JSON response
+                    const volunteerHistory = await response.json();
 
-                    // Clear existing table rows to prevent duplication
-                    tableBody.innerHTML = '';
-                    
+                    tableBody.innerHTML = ''; // Clear loading message
+
+                    if (volunteerHistory.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="5">No volunteer history found for this ID.</td></tr>`;
+                        return;
+                    }
+
                     volunteerHistory.forEach(record => {
-                        const row = tableBody.insertRow(); 
+                        const row = tableBody.insertRow();
                         row.innerHTML = `
-                            <td>${record.date}</td>
-                            <td>${record.event}</td>
-                            <td>${record.hours}</td>
+                            <td>${record.event_date}</td>
+                            <td>${record.event_name}</td>
                             <td>${record.description}</td>
+                            <td>${record.location}</td>
+                            <td>${record.status}</td>
                         `;
                     });
                 } catch (error) {
                     console.error('Error fetching volunteer history:', error);
-                    tableBody.innerHTML = '<tr><td colspan="4">Failed to load volunteer history.</td></tr>';
+                    tableBody.innerHTML = `<tr><td colspan="5">Failed to load history: ${error.message}</td></tr>`;
                 }
             }
-
-            // --- NOTIFICATION MODULE ---
-            /**
-             * Fetches notifications from the simulated backend PHP file and renders them.
-             */
+            
+            // --- Notification Functions (unchanged) ---
             async function fetchAndRenderNotifications() {
-                // Clear any old notifications
                 notificationList.innerHTML = '';
-                notificationBadge.classList.remove('visible'); // Hide badge while fetching
-
+                notificationBadge.classList.remove('visible');
                 try {
                     const response = await fetch('backend/auth/get_notifications.php');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const notifications = await response.json();
 
                     if (notifications.length > 0) {
-                        // Update and show the badge
                         notificationBadge.textContent = notifications.length;
                         notificationBadge.classList.add('visible');
-
-                        // Create list items for each notification
                         notifications.forEach(note => {
                             const li = document.createElement('li');
                             li.textContent = note;
                             notificationList.appendChild(li);
                         });
                     } else {
-                        // Hide badge and show a "no new notifications" message
                         notificationList.innerHTML = '<li class="no-notifications">No new notifications</li>';
                     }
                 } catch (error) {
@@ -245,41 +284,39 @@
                     notificationList.innerHTML = '<li class="no-notifications">Error loading notifications.</li>';
                 }
             }
-            
-            /**
-             * Sends a request to the simulated backend to mark notifications as read.
-             * After "marking as read", it re-fetches and re-renders notifications.
-             */
+
             async function markNotificationsAsRead() {
                 try {
-                    const response = await fetch('backend/auth/mark_notifications_read.php', {
-                        method: 'POST' // Use POST for actions that change state
-                    });
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const result = await response.json();
-                    console.log(result.message); // Log the success message from backend
-                    
-                    // After marking as read on the "backend", re-fetch to reflect the empty state
-                    fetchAndRenderNotifications();
+                    await fetch('backend/auth/mark_notifications_read.php', { method: 'POST' });
+                    fetchAndRenderNotifications(); // Re-fetch to show empty state
                 } catch (error) {
                     console.error('Error marking notifications as read:', error);
                 }
             }
 
-            // --- EVENT LISTENERS ---
-            // Toggle dropdown
+            // --- Event Listeners ---
+            fetchHistoryBtn.addEventListener('click', () => {
+                const userId = userIdInput.value.trim();
+                if (userId) {
+                    fetchAndRenderVolunteerHistory(userId);
+                } else {
+                    alert('Please enter a Volunteer ID.');
+                }
+            });
+
+            userIdInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    fetchHistoryBtn.click(); // Trigger search on Enter key
+                }
+            });
+
             notificationIcon.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevents the document click listener from firing immediately
+                e.stopPropagation();
                 dropdown.classList.toggle('active');
             });
 
-            // Close dropdown and mark notifications as read if a click happens outside of it
             document.addEventListener('click', (e) => {
-                // Check if the click is outside the notification area and the dropdown is currently open
                 if (dropdown.classList.contains('active') && !notificationIcon.contains(e.target) && !dropdown.contains(e.target)) {
-                    // Mark as read only if the badge is visible (meaning there were notifications)
                     if (notificationBadge.classList.contains('visible')) {
                         markNotificationsAsRead();
                     }
@@ -287,9 +324,8 @@
                 }
             });
 
-            // --- INITIAL PAGE LOAD ---
-            fetchAndRenderVolunteerHistory(); // Call the async function to fetch and render
-            fetchAndRenderNotifications();   // Call the async function to fetch and render
+            // --- Initial Page Load ---
+            fetchAndRenderNotifications(); // Fetch notifications on load
         });
     </script>
 </body>
