@@ -1,5 +1,6 @@
 <?php
 session_start();
+include '../components/navbar.php';
 if ($_SESSION['role'] !== 'admin') {
     die("Access denied");
 }
@@ -55,34 +56,6 @@ if ($_SESSION['role'] !== 'admin') {
     .tab-content.active {
       display: flex;
     }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #2e7d32;
-      color: white;
-      padding: 10px 20px;
-      height: 60px;
-    }
-
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 8px 12px;
-      border: 1px solid white;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-
-    .navbar a:hover {
-      background-color: #388e3c;
-    }
-
-    .navbar .left {
-      font-size: 1.2em;
-    }
   </style>
   <script>
     function showTab(id) {
@@ -97,14 +70,6 @@ if ($_SESSION['role'] !== 'admin') {
   </script>
 </head>
 <body>
-
-  <div class="navbar">
-    <div class="left">Volunteer Admin Panel</div>
-    <div class="right">
-      <a href="/../backend/auth/Logout_backend.php">Logout</a>
-    </div>
-  </div>
-
   <div class="dashboard-container">
     <h2>Admin Dashboard</h2>
 
