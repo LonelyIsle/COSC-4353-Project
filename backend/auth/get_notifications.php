@@ -5,6 +5,8 @@ session_start();
 header('Content-Type: application/json');
 
 // --- DATABASE CONNECTION DETAILS ---
+
+
 $servername = $host;
 $username = $user;
 $password = $pass;
@@ -29,16 +31,15 @@ $user_email = $_SESSION['user_email'];
 // --- PREPARE THE SQL SELECT STATEMENT ---
 // The query now selects notifications for a specific user_email
 $sql = "SELECT 
-            notification_id,
-            message,
-            is_read,
-            sent_at
+            n.message
         FROM 
-            Notifications
+            Notifications AS n
+        JOIN 
+            UserCredentials AS uc ON n.user_id = uc.user_id
         WHERE 
-            user_email = ? AND is_read = 0
+            uc.email = ? AND n.is_read = 0
         ORDER BY
-            sent_at DESC";
+            n.sent_at DESC";
 
 $stmt = $conn->prepare($sql);
 

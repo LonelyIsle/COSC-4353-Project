@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+
 $servername = $host;
 $username = $user;
 $password = $pass;
@@ -20,20 +21,19 @@ if (!isset($_GET['user_email']) || empty($_GET['user_email'])) {
 $user_email = $_GET['user_email'];
 
 $sql = "SELECT 
-            vh.id AS history_id,
-            vh.status,
+            ed.event_date,
             ed.event_name,
             ed.description,
             ed.location,
-            ed.required_skills,
-            ed.urgency_level,
-            ed.event_date
+            vh.status
         FROM 
             VolunteerHistory AS vh
         JOIN 
             EventDetails AS ed ON vh.event_id = ed.event_id
+        JOIN 
+            UserCredentials AS uc ON vh.user_id = uc.user_id
         WHERE 
-            vh.user_email = ?";
+            uc.email = ?";
 
 $stmt = $conn->prepare($sql);
 
