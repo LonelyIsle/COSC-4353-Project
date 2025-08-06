@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['role'] === 'admin') {
                 header("Location: /pages/admin_dashboard.php");
             } else {
-                header("Location: /pages/profile_display.php");
+                header("Location: /pages/volunteer_dashboard.php");
             }
             exit();
         } else {

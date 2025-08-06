@@ -37,7 +37,7 @@ if ($profileData) {
     <link rel="stylesheet" href="../css/global.css">
 </head>
 <body>
-    <?php include '../components/navbar.php'; ?>
+    
 
     <div class="centered-page">
         <div class="scrollable-container centered-container" style="padding-top: 4rem;">
