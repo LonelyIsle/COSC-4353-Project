@@ -1,35 +1,33 @@
 <?php
-// --- SETUP ---
-header('Content-Type: application/json'); // Tell the browser we're sending JSON
+// Start the session to access session variables
+session_start();
+
+header('Content-Type: application/json');
 
 // --- DATABASE CONNECTION DETAILS ---
-
 $servername = $host;
 $username = $user;
 $password = $pass;
-$dbname = $db; // The database name from your schema
+$dbname = $db;
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check for connection errors
 if ($conn->connect_error) {
-    // Set HTTP response code to 500 Internal Server Error
     http_response_code(500);
     die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
 }
 
-// --- GET USER ID FROM REQUEST ---
-if (!isset($_GET['user_id']) || empty($_GET['user_id'])) {
-    // Set HTTP response code to 400 Bad Request
-    http_response_code(400);
-    die(json_encode(['error' => 'User ID is required.']));
+// --- GET USER EMAIL FROM SESSION ---
+// Check if the user's email is stored in the session from logging in
+if (!isset($_SESSION['user_email']) || empty($_SESSION['user_email'])) {
+    http_response_code(401); // Unauthorized
+    die(json_encode(['error' => 'User not authenticated.']));
 }
-$user_id = $_GET['user_id'];
+$user_email = $_SESSION['user_email'];
 
 
 // --- PREPARE THE SQL SELECT STATEMENT ---
-// This query selects all notifications for a specific user, ordering by the most recent.
+// The query now selects notifications for a specific user_email
 $sql = "SELECT 
             notification_id,
             message,
@@ -38,7 +36,7 @@ $sql = "SELECT
         FROM 
             Notifications
         WHERE 
-            user_id = ?
+            user_email = ? AND is_read = 0
         ORDER BY
             sent_at DESC";
 
@@ -49,8 +47,8 @@ if ($stmt === false) {
     die(json_encode(['error' => 'Failed to prepare statement: ' . $conn->error]));
 }
 
-// Bind the user_id to the placeholder. "i" means the variable is an integer.
-$stmt->bind_param("i", $user_id);
+// Bind the user_email to the placeholder ("s" for string)
+$stmt->bind_param("s", $user_email);
 
 // --- EXECUTE THE QUERY AND FETCH RESULTS ---
 $stmt->execute();
@@ -58,16 +56,15 @@ $result = $stmt->get_result();
 
 $notifications = [];
 if ($result && $result->num_rows > 0) {
-    // Fetch all results into an associative array
-    $notifications = $result->fetch_all(MYSQLI_ASSOC);
+    while($row = $result->fetch_assoc()) {
+        // We only need the message content for the dropdown
+        $notifications[] = $row['message'];
+    }
 }
 
-// --- CLOSE THE STATEMENT AND CONNECTION ---
+// --- CLOSE AND OUTPUT ---
 $stmt->close();
 $conn->close();
 
-// --- OUTPUT THE DATA AS JSON ---
-// This will output the array of notifications, or an empty array if none were found.
 echo json_encode($notifications);
-
 ?>
