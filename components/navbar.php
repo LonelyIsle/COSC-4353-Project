@@ -17,10 +17,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
         <a href="/pages/admin_dashboard.php" class="nav-btn">Admin Dashboard</a>
       <?php elseif (($_SESSION['role'] ?? '') === 'volunteer'): ?>
-        <a href="/pages/volunteer_dashboard.php" class="nav-btn">My Dashboard</a>
+        <?php if ($current_page !== 'volunteer_dashboard.php'): ?>
+          <a href="/pages/volunteer_dashboard.php" class="nav-btn">My Dashboard</a>
+        <?php endif; ?>
       <?php endif; ?>
 
-      <a href="/pages/profile_display.php" class="nav-btn">Profile</a>
       <a href="/backend/auth/Logout_backend.php" class="nav-btn">Logout</a>
     <?php else: ?>
       <a href="/pages/Login.php" class="nav-btn">Login</a>
