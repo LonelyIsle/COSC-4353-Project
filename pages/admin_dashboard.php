@@ -101,7 +101,7 @@ if ($_SESSION['role'] !== 'admin') {
   <div class="navbar">
     <div class="left">Volunteer Admin Panel</div>
     <div class="right">
-      <a href="/logout.php">Logout</a>
+      <a href="/../backend/auth/Logout_backend.php">Logout</a>
     </div>
   </div>
 
@@ -113,6 +113,7 @@ if ($_SESSION['role'] !== 'admin') {
       <button onclick="showTab('make-admin')">Make Admin</button>
       <button onclick="showTab('view-performance')">View Performance</button>
       <button onclick="showTab('event-timeline')">Event Timeline</button>
+      <button onclick="showTab('volunteer-match')">Volunteer Match</button>
     </div>
 
     <div id="create-event" class="tab-content">
@@ -126,9 +127,29 @@ if ($_SESSION['role'] !== 'admin') {
     <div id="view-performance" class="tab-content">
       <?php include __DIR__ . '/../backend/script/view_performance.php'; ?>
     </div>
+
     <div id="event-timeline" class="tab-content">
       <?php include __DIR__ . '/../backend/script/event_timeline.php'; ?>
+    </div>
+
+    <div id="volunteer-match" class="tab-content">
+      <?php include __DIR__ . '/../backend/script/volunteer-match.php'; ?>
     </div>
   </div>
 </body>
 </html>
+
+<script>
+  function showTab(id) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    const selected = document.getElementById(id);
+    if (selected) selected.classList.add('active');
+  }
+
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab') || 'create-event';
+    showTab(tab);
+  };
+</script>

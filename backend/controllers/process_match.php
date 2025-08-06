@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /pages/VolunteerMatching.php');
+    header('Location: /pages/admin_dashboard.php?tab=volunteer-match');
     exit;
 }
 
@@ -22,7 +22,7 @@ if ($eventId     <= 0) { $errors[] = 'Event selection is required.'; }
 
 if ($errors) {
     $_SESSION['errors'] = $errors;
-    header('Location: /pages/VolunteerMatching.php');
+    header('Location: /pages/admin_dashboard.php?tab=volunteer-match');
     exit;
 }
 
@@ -38,12 +38,12 @@ try {
         ':eid' => $eventId,
     ]);
 
-    header('Location: /pages/VolunteerMatching.php?success=1');
+    header('Location: /pages/admin_dashboard.php?tab=volunteer-match&success=1');
     exit;
 
 } catch (PDOException $e) {
     error_log('process_match error: ' . $e->getMessage());
     $_SESSION['errors'] = ['Failed to match volunteer. Please try again.'];
-    header('Location: /pages/VolunteerMatching.php');
+    header('Location: /pages/admin_dashboard.php?tab=volunteer-match');
     exit;
 }
