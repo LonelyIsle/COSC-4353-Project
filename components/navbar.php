@@ -7,7 +7,7 @@
   </a>
   <div class="navbar-nav">
     <?php if ($current_page !== 'services.php'): ?>
-      <a href="/pages/services.php" class="nav-btn">Our Services</a>
+      <a href="/pages/services.php" class="nav-btn">Volunteer Services</a>
     <?php endif; ?>
     <?php if (isset($_SESSION['user_id'])): ?>
       <a href="/pages/profile_display.php" class="nav-btn">Profile</a>
