@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once __DIR__ . '/../backend/db.php';
 
 $userId = $_SESSION['user_id'] ?? null;
