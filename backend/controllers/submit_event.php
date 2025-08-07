@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
 require_once __DIR__ . '/../db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /pages/EMForm.php');
+    header('Location: /pages/admin_dashboard.php?tab=create-event');
     exit;
 }
 
@@ -34,7 +34,7 @@ if ($eventDate        === '') { $errors[] = 'Event Date is required.'; }
 
 if ($errors) {
     $_SESSION['errors'] = $errors;
-    header('Location: /pages/EMForm.php');
+    header('Location: /pages/admin_dashboard.php?tab=create-event');
     exit;
 }
 
@@ -56,12 +56,12 @@ try {
         ':date'        => $eventDate,
     ]);
 
-    header('Location: /pages/EMForm.php?success=1');
+    header('Location: /pages/admin_dashboard.php?tab=create-event&success=1');
     exit;
 
 } catch (PDOException $e) {
     error_log('submit_event.php error: ' . $e->getMessage());
     $_SESSION['errors'] = ['Failed to create event. Please try again.'];
-    header('Location: /pages/EMForm.php');
+    header('Location: /pages/admin_dashboard.php?tab=create-event');
     exit;
 }

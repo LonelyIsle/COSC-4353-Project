@@ -48,13 +48,24 @@ if ($_SESSION['role'] !== 'admin') {
 
     .tab-content {
       display: none;
-      justify-content: center;
-      align-items: flex-start;
       width: 100%;
+      flex-direction: column;
+      align-items: center;
     }
 
     .tab-content.active {
       display: flex;
+    }
+
+    select[multiple] {
+      height: 120px;          
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      font-size: 14px;
+      resize: vertical;
+      box-sizing: border-box;
     }
   </style>
   <script>
@@ -84,7 +95,7 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
 
     <div id="create-event" class="tab-content">
-      <?php include __DIR__ . '/../backend/script/create_event.php'; ?>
+      <?php include __DIR__ . '/../backend/script/EMForm.php'; ?>
     </div>
 
     <div id="create-assignment" class="tab-content">
@@ -108,7 +119,7 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
 
     <div id="volunteer-match" class="tab-content">
-      <?php include __DIR__ . '/../backend/script/volunteer-match.php'; ?>
+      <?php include __DIR__ . '/../backend/script/VolunteerMatching.php'; ?>
     </div>
   </div>
 </body>
