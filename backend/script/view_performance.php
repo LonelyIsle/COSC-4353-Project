@@ -119,8 +119,8 @@ try {
                         <td><?= htmlspecialchars($row['event_name']) ?></td>
                         <td><?= htmlspecialchars($row['full_name']) ?></td>
                         <td><?= htmlspecialchars($row['status']) ?></td>
-                        <td><?= htmlspecialchars($row['assignment_name']) ?></td>
-                        <td><?= htmlspecialchars($row['comments']) ?></td>
+                        <td><?= htmlspecialchars($row['assignment_name'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($row['comments'] ?? '') ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
