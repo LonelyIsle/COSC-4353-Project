@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../db.php';
-session_start();
 
 if ($_SESSION['role'] !== 'admin') {
     die("Access denied");
@@ -96,6 +95,7 @@ try {
     <!-- CSV Download Button -->
     <div style="text-align: right; margin-bottom: 10px;">
         <button id="downloadCsvBtn" class="filter-button">Download CSV</button>
+        <button id="downloadPdfBtn" class="filter-button">Download PDF</button>
     </div>
 
     <?php if ($error): ?>
@@ -119,8 +119,8 @@ try {
                         <td><?= htmlspecialchars($row['event_name']) ?></td>
                         <td><?= htmlspecialchars($row['full_name']) ?></td>
                         <td><?= htmlspecialchars($row['status']) ?></td>
-                        <td><?= htmlspecialchars($row['assignment_name']) ?></td>
-                        <td><?= htmlspecialchars($row['comments']) ?></td>
+                        <td><?= htmlspecialchars($row['assignment_name'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($row['comments'] ?? '') ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -188,6 +188,9 @@ form .form-group {
 }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
 <script>
 document.getElementById('downloadCsvBtn').addEventListener('click', () => {
     // Collect all rows (header + body)
@@ -215,5 +218,32 @@ document.getElementById('downloadCsvBtn').addEventListener('click', () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+});
+
+document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(14);
+    doc.text("Volunteer Performance Report", 14, 16);
+
+    const headers = [["Event Name", "Volunteer", "Status", "Assignment", "Comment"]];
+    const rows = [];
+
+    document.querySelectorAll(".performance-table tbody tr").forEach(row => {
+        const cols = row.querySelectorAll("td");
+        const rowData = Array.from(cols).map(col => col.textContent.trim());
+        rows.push(rowData);
+    });
+
+    doc.autoTable({
+        startY: 20,
+        head: headers,
+        body: rows,
+        styles: { fontSize: 10, cellPadding: 2 },
+        headStyles: { fillColor: [46, 125, 50] }
+    });
+
+    doc.save("volunteer_performance_report.pdf");
 });
 </script>

@@ -38,10 +38,11 @@ if (isset($_GET['debug'])) {
 <div class="event-container">
     <h2>Event Timeline</h2>
 
-    <!-- CSV Download Button -->
+    <!-- CSV & PDF Download Buttons -->
     <?php if ($events): ?>
-        <div style="text-align:right;margin-bottom:10px;">
+        <div class="download-buttons">
             <button id="downloadTimelineCsvBtn" class="download-button">Download CSV</button>
+            <button id="downloadTimelinePdfBtn" class="download-button">Download PDF</button>
         </div>
     <?php endif; ?>
 
@@ -65,6 +66,8 @@ if (isset($_GET['debug'])) {
     <?php endif; ?>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 /* …(same CSS as before)… */
 .timeline-list{list-style:none;padding:0;margin:0;}
@@ -72,6 +75,10 @@ if (isset($_GET['debug'])) {
 .timeline-item h3{margin-bottom:10px;color:#2e7d32;}
 .download-button{padding:6px 12px;background:#fff;color:#2e7d32;border:1px solid #2e7d32;border-radius:4px;cursor:pointer;}
 .download-button:hover{background:#e8f5e9;}
+.download-buttons {
+    text-align: center;
+    margin-bottom: 10px;
+}
 </style>
 
 <script>
@@ -111,5 +118,52 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
+
+    const pdfBtn = document.getElementById('downloadTimelinePdfBtn');
+    if (pdfBtn) {
+        pdfBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf || window.jspdf || {};
+            if (!jsPDF) {
+                alert('jsPDF library is not loaded.');
+                return;
+            }
+
+            const doc = new jsPDF();
+            doc.setFontSize(14);
+            doc.text("Event Timeline", 20, 20);
+
+            const items = document.querySelectorAll('.timeline-item');
+            let y = 30;
+
+            items.forEach((li, idx) => {
+                const title = li.querySelector('h3')?.textContent || '';
+                const date = li.querySelector('p:nth-of-type(1)')?.textContent || '';
+                const location = li.querySelector('p:nth-of-type(2)')?.textContent || '';
+                const skills = li.querySelector('p:nth-of-type(3)')?.textContent || '';
+                const urgency = li.querySelector('p:nth-of-type(4)')?.textContent || '';
+
+                const lines = [
+                    `Event Name: ${title}`,
+                    `${date}`,
+                    `${location}`,
+                    `${skills}`,
+                    `${urgency}`,
+                ];
+
+                lines.forEach(line => {
+                    doc.text(line, 20, y);
+                    y += 8;
+                    if (y > 280) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                });
+
+                y += 8;
+            });
+
+            doc.save("event_timeline.pdf");
+        });
+    }
 });
 </script>
