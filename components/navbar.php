@@ -30,4 +30,3 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <?php endif; ?>
   </div>
 </nav>
-
