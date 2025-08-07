@@ -1,6 +1,7 @@
 <?php
 // Start the session to access session variables
 session_start();
+require_once __DIR__ . '/../db.php';
 
 header('Content-Type: application/json');
 

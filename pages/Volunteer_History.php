@@ -1,15 +1,22 @@
+<?php
+
+session_start();
+
+if (($_SESSION['role'] ?? '') !== 'volunteer') {
+    header('Location: /pages/Login.php');
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/css/global.css" />
     <meta charset="UTF-8">
     <title>Volunteer Dashboard</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; }
         header { background-color: #2e7d32; padding: 0.75rem 2rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
-        .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; position: relative; }
-        .nav-left a, .nav-right a { color: #fff; margin-right: 1.5rem; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
-        .nav-left a:last-child { margin-right: 0; }
-        .nav-left a:hover, .nav-right a:hover { color: #c8e6c9; }
         #notificationIcon { font-size: 1.3rem; position: relative; cursor: pointer; }
         .badge { position: absolute; top: -5px; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; display: none; }
         .badge.visible { display: inline; }
@@ -32,21 +39,9 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-left">
-                <a href="index.php">Home</a>
-                <a href="#history">Volunteer History</a>
-            </div>
-            <div class="nav-right">
-                <a id="notificationIcon">🔔<span class="badge" id="notificationBadge"></span></a>
-                <div class="dropdown" id="notificationDropdown">
-                    <ul id="notificationList"></ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
+<?php
+include __DIR__ . '../components/navbar.php';
+?>
     <h1 id="history">Volunteer History</h1>
 
     <div class="search-container">

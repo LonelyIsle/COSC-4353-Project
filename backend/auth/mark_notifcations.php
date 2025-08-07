@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once __DIR__ . '/../db.php';
 header('Content-Type: application/json'); // Tell the browser we're sending JSON
 
 // Simulate success of marking notifications as read
