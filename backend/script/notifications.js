@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function markNotificationsAsRead() {
     try {
-      await fetch('/backend/auth/mark_notifications_read.php', { method: 'POST' });
+      await fetch('/backend/auth/mark_notifcations.php', { method: 'POST' });
       fetchAndRenderNotifications();
     } catch (error) {
       console.error('Error marking notifications as read:', error);
