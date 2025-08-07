@@ -35,6 +35,7 @@ if ($selected_event && $selected_volunteer) {
 
   <form method="GET" action="">
     <input type="hidden" name="tab" value="comment_volunteer">
+
     <div class="form-group">
       <label for="event_id">Select Event</label>
       <select name="event_id" id="event_id" onchange="this.form.submit()" required>
@@ -60,8 +61,13 @@ if ($selected_event && $selected_volunteer) {
         </select>
       </div>
     <?php endif; ?>
+  </form>
 
-    <?php if ($selected_event && $selected_volunteer): ?>
+  <?php if ($selected_event && $selected_volunteer): ?>
+    <form method="POST" action="/backend/controllers/process_comment.php">
+      <input type="hidden" name="event_id" value="<?= htmlspecialchars($selected_event) ?>">
+      <input type="hidden" name="volunteer_id" value="<?= htmlspecialchars($selected_volunteer) ?>">
+
       <div class="form-group">
         <label for="assignment_id">Select Assignment</label>
         <select name="assignment_id" id="assignment_id" required>
@@ -78,6 +84,6 @@ if ($selected_event && $selected_volunteer) {
       </div>
 
       <button type="submit">Submit Comment</button>
-    <?php endif; ?>
-  </form>
+    </form>
+  <?php endif; ?>
 </div>
