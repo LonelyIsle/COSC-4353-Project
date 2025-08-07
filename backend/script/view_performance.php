@@ -189,20 +189,76 @@ form .form-group {
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+console.log('[Performance Report] script loaded');
+
+document.addEventListener('DOMContentLoaded', () => {
+    const pdfBtn = document.getElementById('downloadPdfBtn');
+    if (!pdfBtn) {
+        console.warn('[Performance Report] No PDF button found.');
+        return;
+    }
+
+    pdfBtn.addEventListener('click', () => {
+        const { jsPDF } = window.jspdf || {};
+        if (!jsPDF) {
+            alert("jsPDF library is not loaded.");
+            return;
+        }
+
+        const doc = new jsPDF();
+        doc.setFontSize(14);
+        doc.text("Volunteer Performance Report", 20, 20);
+
+        const rows = document.querySelectorAll('.performance-table tbody tr');
+        let y = 30;
+
+        rows.forEach(row => {
+            const cols = row.querySelectorAll('td');
+            if (cols.length === 0) return;
+
+            const event = cols[0]?.textContent.trim();
+            const name = cols[1]?.textContent.trim();
+            const status = cols[2]?.textContent.trim();
+            const assignment = cols[3]?.textContent.trim();
+            const comments = cols[4]?.textContent.trim();
+
+            const lines = [
+                `Event: ${event}`,
+                `Volunteer: ${name}`,
+                `Status: ${status}`,
+                `Assignment: ${assignment}`,
+                `Comment: ${comments}`,
+            ];
+
+            lines.forEach(line => {
+                doc.text(line, 20, y);
+                y += 8;
+                if (y > 280) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+
+            y += 8;
+        });
+
+        doc.save("volunteer_performance_report.pdf");
+    });
+});
+</script>
 
 <script>
 document.getElementById('downloadCsvBtn').addEventListener('click', () => {
-    // Collect all rows (header + body)
     const rows = document.querySelectorAll('.performance-table tr');
     const csv = [];
 
     rows.forEach(row => {
         const cols = row.querySelectorAll('th, td');
         const rowData = Array.from(cols).map(col => {
-            // Escape double-quotes by doubling them
             const text = col.textContent.trim().replace(/"/g, '""');
-            return "${text}";
+            return `"${text}"`;
         });
         csv.push(rowData.join(','));
     });
@@ -212,38 +268,11 @@ document.getElementById('downloadCsvBtn').addEventListener('click', () => {
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
 
-    a.href        = url;
-    a.download    = 'volunteer_performance_report.csv';
+    a.href     = url;
+    a.download = 'volunteer_performance_report.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-});
-
-document.getElementById('downloadPdfBtn').addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFontSize(14);
-    doc.text("Volunteer Performance Report", 14, 16);
-
-    const headers = [["Event Name", "Volunteer", "Status", "Assignment", "Comment"]];
-    const rows = [];
-
-    document.querySelectorAll(".performance-table tbody tr").forEach(row => {
-        const cols = row.querySelectorAll("td");
-        const rowData = Array.from(cols).map(col => col.textContent.trim());
-        rows.push(rowData);
-    });
-
-    doc.autoTable({
-        startY: 20,
-        head: headers,
-        body: rows,
-        styles: { fontSize: 10, cellPadding: 2 },
-        headStyles: { fillColor: [46, 125, 50] }
-    });
-
-    doc.save("volunteer_performance_report.pdf");
 });
 </script>
