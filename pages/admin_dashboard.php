@@ -95,7 +95,7 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
 
     <div id="create-event" class="tab-content">
-      <?php include __DIR__ . '/../backend/script/EMForm.php'; ?>
+      <?php include __DIR__ . '/EMForm.php'; ?>
     </div>
 
     <div id="create-assignment" class="tab-content">
