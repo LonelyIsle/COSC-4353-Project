@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../db.php';
-session_start();
 
 if ($_SESSION['role'] !== 'admin') {
     die("Access denied");
