@@ -1,100 +1,83 @@
 <?php
 require_once __DIR__ . '/../db.php';
 
-$stmt = $pdo->prepare("SELECT user_id, email AS volunteer_name FROM UserCredentials WHERE role = 'volunteer' ORDER BY email");
-$stmt->execute();
-$volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$selected_event = $_GET['event_id'] ?? '';
+$selected_volunteer = $_GET['volunteer_id'] ?? '';
 
-$stmt = $pdo->prepare("SELECT event_id, event_name FROM EventDetails ORDER BY event_date ASC");
-$stmt->execute();
-$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$events = $pdo->query("SELECT event_id, event_name FROM EventDetails ORDER BY event_date ASC")->fetchAll();
 
-$errors = $_SESSION['errors'] ?? [];
-$success = $_SESSION['comment_success'] ?? false;
-unset($_SESSION['errors'], $_SESSION['comment_success']);
+$volunteers = [];
+if ($selected_event) {
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT uc.user_id, uc.email
+        FROM EventAssignments ea
+        JOIN UserCredentials uc ON ea.user_id = uc.user_id
+        WHERE ea.event_id = ?
+    ");
+    $stmt->execute([$selected_event]);
+    $volunteers = $stmt->fetchAll();
+}
+
+$assignments = [];
+if ($selected_event && $selected_volunteer) {
+    $stmt = $pdo->prepare("
+        SELECT assignment_id, name
+        FROM EventAssignments
+        WHERE event_id = ? AND user_id = ?
+    ");
+    $stmt->execute([$selected_event, $selected_volunteer]);
+    $assignments = $stmt->fetchAll();
+}
 ?>
 
 <div class="event-container">
   <h2>Comment on Volunteer</h2>
 
-  <?php if ($success): ?>
-    <div class="success-message" style="background: #ddffdd; border: 1px solid #2e7d32; padding: 10px; border-radius: 5px; color: #2e7d32; margin-bottom: 15px;">
-      Comment added successfully!
-    </div>
-  <?php endif; ?>
-
-  <?php if (!empty($errors)): ?>
-    <div class="error-messages">
-      <ul>
-        <?php foreach ($errors as $e): ?>
-          <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  <?php endif; ?>
-
-  <form action="/backend/controllers/process_comment.php" method="POST">
+  <form method="GET" action="">
+    <input type="hidden" name="tab" value="comment_volunteer">
     <div class="form-group">
-      <label for="event_id">Event <span>*</span></label>
-      <select name="event_id" id="event_id" required>
-        <option value="" disabled selected>Select Event</option>
+      <label for="event_id">Select Event</label>
+      <select name="event_id" id="event_id" onchange="this.form.submit()" required>
+        <option value="">-- Choose an event --</option>
         <?php foreach ($events as $e): ?>
-          <option value="<?= $e['event_id'] ?>"><?= htmlspecialchars($e['event_name']) ?></option>
+          <option value="<?= $e['event_id'] ?>" <?= $e['event_id'] == $selected_event ? 'selected' : '' ?>>
+            <?= htmlspecialchars($e['event_name']) ?>
+          </option>
         <?php endforeach; ?>
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="volunteer_id">Volunteer <span>*</span></label>
-      <select name="volunteer_id" id="volunteer_id" required>
-        <option value="" disabled selected>Select Volunteer</option>
-        <?php foreach ($volunteers as $v): ?>
-          <option value="<?= $v['user_id'] ?>"><?= htmlspecialchars($v['volunteer_name']) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-
-    <div class="form-group">
-        <label for="assignment_id">Assignment <span>*</span></label>
-        <select name="assignment_id" id="assignment_id" required>
-            <option value="" disabled selected>Select Assignment</option>
+    <?php if ($selected_event): ?>
+      <div class="form-group">
+        <label for="volunteer_id">Select Volunteer</label>
+        <select name="volunteer_id" id="volunteer_id" onchange="this.form.submit()" required>
+          <option value="">-- Choose a volunteer --</option>
+          <?php foreach ($volunteers as $v): ?>
+            <option value="<?= $v['user_id'] ?>" <?= $v['user_id'] == $selected_volunteer ? 'selected' : '' ?>>
+              <?= htmlspecialchars($v['email']) ?>
+            </option>
+          <?php endforeach; ?>
         </select>
-    </div>
+      </div>
+    <?php endif; ?>
 
-    <div class="form-group">
-      <label for="comment">Comment <span>*</span></label>
-      <textarea name="comment" id="comment" rows="4" required></textarea>
-    </div>
+    <?php if ($selected_event && $selected_volunteer): ?>
+      <div class="form-group">
+        <label for="assignment_id">Select Assignment</label>
+        <select name="assignment_id" id="assignment_id" required>
+          <option value="">-- Choose an assignment --</option>
+          <?php foreach ($assignments as $a): ?>
+            <option value="<?= $a['assignment_id'] ?>"><?= htmlspecialchars($a['name']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-    <button type="submit">Submit Comment</button>
+      <div class="form-group">
+        <label for="comment">Comment</label>
+        <textarea name="comment" id="comment" rows="4" required></textarea>
+      </div>
+
+      <button type="submit">Submit Comment</button>
+    <?php endif; ?>
   </form>
 </div>
-
-<script>
-const eventSelect = document.getElementById('event_id');
-const volunteerSelect = document.getElementById('volunteer_id');
-const assignmentSelect = document.getElementById('assignment_id');
-
-function fetchAssignments(eventId, volunteerId) {
-  if (!eventId || !volunteerId) return;
-
-  fetch(`/backend/ajax/get_assignments.php?event_id=${eventId}&volunteer_id=${volunteerId}`)
-    .then(res => res.json())
-    .then(data => {
-      assignmentSelect.innerHTML = '<option value="" disabled selected>Select Assignment</option>';
-      data.forEach(a => {
-        if (a.name?.trim()) {
-          assignmentSelect.innerHTML += `<option value="${a.assignment_id}">${a.name}</option>`;
-        }
-      });
-    });
-}
-
-eventSelect.addEventListener('change', () => {
-  fetchAssignments(eventSelect.value, volunteerSelect.value);
-});
-
-volunteerSelect.addEventListener('change', () => {
-  fetchAssignments(eventSelect.value, volunteerSelect.value);
-});
-</script>
