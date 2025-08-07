@@ -18,10 +18,10 @@ include __DIR__ . '/../components/navbar.php';
   <link rel="stylesheet" href="/css/global.css" />
   <style>
     .dashboard-container {
-      max-width: 900px;
+      max-width: 750px;
       margin: 40px auto;
-      background: #e1f5fe;
-      padding: 30px;
+      background: #fff8e1;
+      padding: 20px;
       border-radius: 8px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
@@ -35,7 +35,7 @@ include __DIR__ . '/../components/navbar.php';
       flex: 1;
       padding: 10px;
       border: none;
-      background: #0288d1;
+      background: #2e7d32;
       color: white;
       font-weight: bold;
       border-radius: 4px;
@@ -43,11 +43,18 @@ include __DIR__ . '/../components/navbar.php';
       transition: background 0.2s;
     }
     .tab-buttons button:hover {
-      background: #0277bd;
+      background: #388e3c;
     }
     .tab-content {
       display: none;
       margin-top: 20px;
+      background: #fefae0;
+      padding: 18px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     .tab-content.active {
       display: block;
