@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <?php endif; ?>
 
     <?php if (!empty($errors)): ?>
-        <div class="error-box">
+        <div class="error-box" style="background: #ffdddd; border: 1px solid #c00; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
             <ul>
                 <?php foreach ($errors as $error): ?>
                     <li><?= htmlspecialchars($error) ?></li>
@@ -98,7 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="form-group">
             <label for="urgency_level">Urgency Level</label>
-            <input type="text" name="urgency_level" id="urgency_level" required value="<?= htmlspecialchars($urgency ?? '') ?>">
+            <select name="urgency_level" id="urgency_level" required>
+                <option value="" disabled <?= !isset($urgency) ? 'selected' : '' ?>>Select urgency</option>
+                <option value="low" <?= (isset($urgency) && $urgency === 'low') ? 'selected' : '' ?>>Low</option>
+                <option value="medium" <?= (isset($urgency) && $urgency === 'medium') ? 'selected' : '' ?>>Medium</option>
+                <option value="high" <?= (isset($urgency) && $urgency === 'high') ? 'selected' : '' ?>>High</option>
+            </select>
         </div>
 
         <div class="form-group">

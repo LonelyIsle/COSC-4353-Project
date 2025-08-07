@@ -79,10 +79,20 @@ if ($_SESSION['role'] !== 'admin') {
       <button onclick="showTab('view-performance')">View Performance</button>
       <button onclick="showTab('event-timeline')">Event Timeline</button>
       <button onclick="showTab('volunteer-match')">Volunteer Match</button>
+      <button onclick="showTab('create-assignment')">Create Assignment</button>
+      <button onclick="showTab('comment-volunteer')">Comment Volunteer</button>
     </div>
 
     <div id="create-event" class="tab-content">
       <?php include __DIR__ . '/../backend/script/create_event.php'; ?>
+    </div>
+
+    <div id="create-assignment" class="tab-content">
+      <?php include __DIR__ . '/../backend/script/create_assignment.php'; ?>
+    </div>
+
+    <div id="comment-volunteer" class="tab-content">
+      <?php include __DIR__ . '/../backend/script/comment_volunteer.php'; ?>
     </div>
 
     <div id="make-admin" class="tab-content">
