@@ -42,10 +42,6 @@ if ($profileData) {
         <div class="scrollable-container centered-container" style="padding-top: 4rem;">
             <div class="event-container">
                 <h2 style="text-align: left;">Profile Information</h2>
-                <?php if (!$hasProfile): ?>
-                    <p>You haven’t set up your profile yet.</p>
-                    <a href="profile.php" class="btn">Complete My Profile</a>
-                <?php endif; ?>
                 <div class="form-group">
                     <p><strong>Full Name:</strong> <?php echo htmlspecialchars($profile['full_name'] ?? 'Not provided'); ?></p>
                     <p><strong>Address:</strong> <?php echo htmlspecialchars($profile['address'] ?? 'Not provided'); ?></p>
@@ -55,7 +51,20 @@ if ($profileData) {
                     <p><strong>Zip Code:</strong> <?php echo htmlspecialchars($profile['zipcode'] ?? 'Not provided'); ?></p>
                     <p><strong>Skills:</strong> <?php echo htmlspecialchars($profile['skills'] ?? 'Not provided'); ?></p>
                     <p><strong>Preferences:</strong> <?php echo htmlspecialchars($profile['preferences'] ?? 'Not provided'); ?></p>
-                    <p><strong>Availability:</strong> <?php echo htmlspecialchars($profile['availability'] ?? 'Not provided'); ?></p>
+                    <p><strong>Availability:</strong><br>
+                    <?php
+                        $availability = json_decode($profile['availability'] ?? '[]', true);
+                        if (!empty($availability)) {
+                            echo '<ul>';
+                            foreach ($availability as $date) {
+                                echo '<li>' . htmlspecialchars($date) . '</li>';
+                            }
+                            echo '</ul>';
+                        } else {
+                            echo 'Not provided';
+                        }
+                    ?>
+                    </p>
                     <a href="profile.php" class="button-link" style="margin-left: 0;">Edit Profile</a>
                 </div>
             </div>

@@ -116,7 +116,7 @@ try {
     error_log("Profile saved. User ID: ".$userId);
 
     echo "<script>alert('Profile successfully updated!');</script>";
-    header('Location: /pages/profile_display.php?success=1');
+    header('Location: /pages/volunteer_dashboard.php?success=1');
     exit;
 
 } catch (PDOException $e) {
