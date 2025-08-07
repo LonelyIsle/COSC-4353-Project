@@ -324,3 +324,114 @@ button:hover {
     flex: 1;
     max-width: 500px;
 }
+.page-notification-container {
+  width: 80%;
+  margin: -12rem auto 16rem;
+  text-align: right;
+  position: relative;
+}
+#pageNotificationBtn {
+  font-size: 1.3rem;
+  position: relative;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#pageNotificationBtn:hover {
+  background-color: #f2f2f2;
+}
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  display: none;
+}
+.badge.visible {
+  display: inline;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 2.8rem;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  width: 280px;
+  z-index: 1000;
+  overflow: hidden;
+}
+.dropdown.active {
+  display: block;
+}
+.dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dropdown li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #333;
+}
+.dropdown li:last-child {
+  border-bottom: none;
+}
+.dropdown .no-notifications {
+  color: #999;
+  text-align: center;
+}
+ .dashboard-container {
+      max-width: 750px;
+      margin: 40px auto;
+      background: #fff8e1;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+    .tab-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: #2e7d32;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tab-buttons button:hover {
+      background: #388e3c;
+    }
+    .tab-content {
+      display: none;
+      margin-top: 20px;
+      background: #fefae0;
+      padding: 18px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .tab-content.active {
+      display: block;
+    }
