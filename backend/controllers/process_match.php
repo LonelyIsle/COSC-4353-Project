@@ -28,15 +28,31 @@ if ($errors) {
 
 try {
     $stmt = $pdo->prepare("
-        INSERT INTO VolunteerHistory
-          (user_id, event_id, status)
-        VALUES
-          (:uid, :eid, 'registered')
+        INSERT INTO VolunteerHistory (user_id, event_id, status)
+        VALUES (:uid, :eid, 'registered')
     ");
     $stmt->execute([
         ':uid' => $volunteerId,
         ':eid' => $eventId,
     ]);
+
+    $stmt = $pdo->prepare("SELECT event_name FROM EventDetails WHERE event_id = ?");
+    $stmt->execute([$eventId]);
+    $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($event) {
+        $message = "You have been matched with the event: " . $event['event_name'];
+
+        // Insert notification
+        $stmt = $pdo->prepare("
+            INSERT INTO Notifications (user_id, message, is_read, sent_at)
+            VALUES (:uid, :msg, 0, NOW())
+        ");
+        $stmt->execute([
+            ':uid' => $volunteerId,
+            ':msg' => $message,
+        ]);
+    }
 
     header('Location: /pages/admin_dashboard.php?tab=volunteer-match&success=1');
     exit;
