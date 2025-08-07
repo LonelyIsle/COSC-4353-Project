@@ -3,7 +3,18 @@ session_start();
 require_once __DIR__ . '/../db.php';
 header('Content-Type: application/json');
 
+// --- CHECK IF USER IS LOGGED IN ---
+// Ensure the user_id is set in the session
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401); // Unauthorized
+    die(json_encode(['error' => 'User not authenticated. Please log in.']));
+}
 
+// Get the logged-in volunteer's ID from the session
+$volunteer_id = $_SESSION['user_id'];
+
+
+// --- DATABASE CONNECTION ---
 $servername = $host;
 $username = $user;
 $password = $pass;
@@ -16,11 +27,6 @@ if ($conn->connect_error) {
     die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
 }
 
-if (!isset($_GET['user_email']) || empty($_GET['user_email'])) {
-    http_response_code(400);
-    die(json_encode(['error' => 'User Email is required.']));
-}
-$user_email = $_GET['user_email'];
 
 $sql = "SELECT 
             ed.event_date,
@@ -32,10 +38,10 @@ $sql = "SELECT
             VolunteerHistory AS vh
         JOIN 
             EventDetails AS ed ON vh.event_id = ed.event_id
-        JOIN 
-            UserCredentials AS uc ON vh.user_id = uc.user_id
         WHERE 
-            uc.email = ?";
+            vh.user_id = ?
+        ORDER BY
+            ed.event_date DESC"; // Order by most recent event
 
 $stmt = $conn->prepare($sql);
 
@@ -44,13 +50,15 @@ if ($stmt === false) {
     die(json_encode(['error' => 'Failed to prepare statement: ' . $conn->error]));
 }
 
-$stmt->bind_param("s", $user_email);
+// Bind the integer user_id from the session ("i" for integer)
+$stmt->bind_param("i", $volunteer_id);
 
 $stmt->execute();
 $result = $stmt->get_result();
 
 $volunteerHistory = [];
 if ($result && $result->num_rows > 0) {
+   
     $volunteerHistory = $result->fetch_all(MYSQLI_ASSOC);
 }
 

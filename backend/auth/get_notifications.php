@@ -5,9 +5,20 @@ require_once __DIR__ . '/../db.php';
 
 header('Content-Type: application/json');
 
-// --- DATABASE CONNECTION DETAILS ---
+// --- CHECK FOR AUTHENTICATED USER ---
+// First, ensure the user is logged in and the user_id is in the session
+if (!isset($_SESSION['user_id'])) {
+    // Send an "Unauthorized" response code if the user is not logged in
+    http_response_code(401); 
+    echo json_encode(['error' => 'User not authenticated.']);
+    exit;
+}
+
+// Get the logged-in user's ID from the session
+$user_id = $_SESSION['user_id'];
 
 
+// --- DATABASE CONNECTION ---
 $servername = $host;
 $username = $user;
 $password = $pass;
@@ -20,27 +31,16 @@ if ($conn->connect_error) {
     die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
 }
 
-// --- GET USER EMAIL FROM SESSION ---
-// Check if the user's email is stored in the session from logging in
-if (!isset($_SESSION['user_email']) || empty($_SESSION['user_email'])) {
-    http_response_code(401); // Unauthorized
-    die(json_encode(['error' => 'User not authenticated.']));
-}
-$user_email = $_SESSION['user_email'];
-
-
 // --- PREPARE THE SQL SELECT STATEMENT ---
-// The query now selects notifications for a specific user_email
+// This query is now simpler and more efficient. It gets notifications for the logged-in user.
 $sql = "SELECT 
-            n.message
+            message
         FROM 
-            Notifications AS n
-        JOIN 
-            UserCredentials AS uc ON n.user_id = uc.user_id
+            Notifications
         WHERE 
-            uc.email = ? AND n.is_read = 0
+            user_id = ? AND is_read = 0
         ORDER BY
-            n.sent_at DESC";
+            sent_at DESC";
 
 $stmt = $conn->prepare($sql);
 
@@ -49,8 +49,8 @@ if ($stmt === false) {
     die(json_encode(['error' => 'Failed to prepare statement: ' . $conn->error]));
 }
 
-// Bind the user_email to the placeholder ("s" for string)
-$stmt->bind_param("s", $user_email);
+// Bind the integer user_id from the session ("i" for integer)
+$stmt->bind_param("i", $user_id);
 
 // --- EXECUTE THE QUERY AND FETCH RESULTS ---
 $stmt->execute();
