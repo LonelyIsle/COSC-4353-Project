@@ -33,11 +33,15 @@ This project is a comprehensive web-based volunteer coordination and event manag
    ```bash
    cd COSC-4353-Project
    ```
-3. Start PHP's built-in server:
+3. Install Composer
+   ```bash
+   composer install
+   ```
+5. Start PHP's built-in server:
    ```bash
    php -S localhost:8000
    ```
-4. Open your browser and go to:
+6. Open your browser and go to:
    ```
    http://localhost:8000
    ```
