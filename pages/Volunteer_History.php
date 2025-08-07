@@ -22,6 +22,7 @@ if (($_SESSION['role'] ?? '') !== 'volunteer') {
         th { background-color: #f2f2f2; }
         tr:hover { background-color: #f9f9f9; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onload="window.jspdf = window.jspdf || window.jspdf_umd;"></script>
 </head>
 <body>
 <?php
@@ -42,6 +43,10 @@ include __DIR__ . '/../components/navbar.php';
         <tbody>
             </tbody>
     </table>
+
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <button id="downloadPdfBtn">Download PDF</button>
+    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -78,6 +83,30 @@ include __DIR__ . '/../components/navbar.php';
         }
 
         fetchAndRenderVolunteerHistory();
+    });
+
+    document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const table = document.getElementById('volunteerTable');
+        const rows = table.querySelectorAll('tbody tr');
+
+        doc.setFontSize(16);
+        doc.text("Volunteer History", 20, 20);
+
+        let y = 30;
+        rows.forEach((row) => {
+            const cells = row.querySelectorAll('td');
+            let x = 20;
+            cells.forEach(cell => {
+                doc.setFontSize(10);
+                doc.text(cell.textContent || '', x, y);
+                x += 40;
+            });
+            y += 10;
+        });
+
+        doc.save('Volunteer_History.pdf');
     });
     </script>
 </body>
